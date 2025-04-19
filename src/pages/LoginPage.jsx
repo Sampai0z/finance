@@ -105,6 +105,12 @@ export default function Login() {
               to="/termos"
               className="text-amber-200 hover:underline text-sm"
             >
+              Desenvolvido por DuoWave
+            </Link>
+            <Link
+              to="/termos"
+              className="text-amber-200 hover:underline text-sm"
+            >
               Termos de Uso
             </Link>
             <Link
