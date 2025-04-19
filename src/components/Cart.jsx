@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-// import { Trash2 } from "lucide-react" // Descomente se quiser usar o ícone
-// import { Button } from "@/components/ui/button"
+import { Trash2 } from "lucide-react"; // Descomente se quiser usar o ícone
+// import { Button } from "@/components/ui/button";
 
 // Dados simulados dos produtos
 const salgadosData = [
@@ -95,8 +95,7 @@ export default function Cart() {
                   onClick={() => removeItem(item.id)}
                   className="text-red-500 hover:text-red-700"
                 >
-                  {/* <Trash2 className="h-5 w-5" /> */}
-                  <p>Remover</p>
+                  <Trash2 className="h-5 w-5" />
                 </button>
               </div>
             </div>
