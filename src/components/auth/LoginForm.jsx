@@ -1,12 +1,33 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import api from "../../services/api"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await api.get("/api/clientes/login", {
+        params: { email, password: password },
+      });
+
+      const { token } = response.data;
+      localStorage.setItem("token", token); // salva o token
+
+
+
+
+      alert("Login realizado com sucesso!");
+      navigate("/area-cliente")
+    } catch (err) {
+      alert("Erro no login: " + err.response?.data?.message || "Erro desconhecido");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -91,6 +112,7 @@ export default function LoginForm() {
         <button
           type="submit"
           className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+          onClick={handleLogin}
         >
           Entrar
         </button>

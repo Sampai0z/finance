@@ -24,17 +24,18 @@ export default function ClientArea() {
   const navigate = useNavigate();
 
   // Simulando um usuário logado - em uma aplicação real, isso viria de um contexto de autenticação
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handleLogout = () => {
-    // Lógica de logout aqui
-    setIsLoggedIn(false);
+    
+    localStorage.removeItem("token");
     navigate("/login");
+    
   };
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
+  // if (!isLoggedIn) {
+  //   return <Navigate to="/login" />;
+  // }
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -88,7 +89,7 @@ export default function ClientArea() {
         </div>
       </header>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 relative">
         {/* Sidebar - Mobile Overlay */}
         <div
           className={`fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden transition-opacity duration-200 ${
@@ -99,7 +100,8 @@ export default function ClientArea() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform transition-transform duration-200 ease-in-out md:relative md:translate-x-0 md:shadow-none ${
+          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform transition-transform duration-200 ease-in-out 
+            md:absolute md:h-full md:translate-x-0 md:shadow-none border-black ${
             isSidebarOpen
               ? "translate-x-0"
               : "-translate-x-full md:translate-x-0"
@@ -116,7 +118,7 @@ export default function ClientArea() {
             </button>
           </div>
 
-          <div className="p-4">
+          <div className="p-4 border-r-2 border-s-stone-200">
             <div className="flex items-center space-x-3 mb-6 p-3 bg-amber-50 rounded-lg">
               <div className="h-10 w-10 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-medium">
                 JD
@@ -127,7 +129,7 @@ export default function ClientArea() {
               </div>
             </div>
 
-            <nav className="space-y-1">
+            <nav className="space-y-1 min-h-64 ">
               <Link
                 to="/cliente"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
@@ -180,7 +182,7 @@ export default function ClientArea() {
                 <span>Meus Endereços</span>
               </Link>
 
-              <Link
+              {/* <Link
                 to="/cliente/favoritos"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
                   isActive("/cliente/favoritos")
@@ -191,7 +193,7 @@ export default function ClientArea() {
               >
                 <Heart className="h-5 w-5" />
                 <span>Favoritos</span>
-              </Link>
+              </Link> */}
             </nav>
           </div>
 
