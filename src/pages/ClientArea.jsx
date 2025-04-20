@@ -175,7 +175,9 @@ export default function ClientArea() {
                 JD
               </div>
               <div>
-                <div className="font-medium text-amber-900">{user.nome}</div>
+                <div className="font-medium text-amber-900">
+                  {user.nomeCompleto}
+                </div>
                 <div className="text-sm text-amber-600">Cliente desde 2023</div>
               </div>
             </div>
