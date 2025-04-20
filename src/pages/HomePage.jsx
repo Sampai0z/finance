@@ -1,9 +1,54 @@
 import { ShoppingCart } from "lucide-react";
 import ProductGrid from "../components/ProductGrid";
 import Cart from "../components/Cart";
-
+import api from "../../src/services/api";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 export default function HomePage() {
+  const [isLogin, setIsLogin] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      const response = await api.get("/api/usuario", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = response.data;
+      console.log(user);
+      setUser(user);
+    } catch (err) {
+      err.response?.data?.message || "Erro desconhecido";
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    getUserData();
+    if (token) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLogin(false);
+    setUser(null);
+    window.location.href = "/login";
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-10 bg-white border-b">
@@ -35,6 +80,48 @@ export default function HomePage() {
                 0
               </span>
             </Link>
+
+            {isLogin ? (
+              <div className="relative group">
+                <button className="flex items-center space-x-2 p-2 rounded-full :bg-amber-100 transition-colors ">
+                  <div className="h-8 w-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-medium">
+                    {user?.nome?.charAt(0) || "U"}
+                  </div>
+                  <span className="hidden md:inline font-medium text-gray-700">
+                    {user?.nome?.split(" ")[0] || "Usuário"}
+                  </span>
+                </button>
+                {/* Dropdown Menu */}
+                <div className="z-10 hidden absolute bg-white rounded-md shadow-lg right-0 w-48  py-1 group-hover:block">
+                  <Link
+                    to="/area-cliente"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                  >
+                    Minha Conta
+                  </Link>
+                  <Link
+                    to="/area-cliente"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                  >
+                    Meus Pedidos
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                  >
+                    Sair
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+              >
+                {/* <User className="h-5 w-5" /> */}
+                <span>Entrar</span>
+              </Link>
+            )}
           </div>
         </div>
       </header>

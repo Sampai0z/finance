@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import api from "../../services/api"
+import api from "../../services/api";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -17,15 +17,12 @@ export default function LoginForm() {
       });
 
       const { token } = response.data;
-      localStorage.setItem("token", token); // salva o token
-
-
-
-
-      alert("Login realizado com sucesso!");
-      navigate("/area-cliente")
+      localStorage.setItem("token", token);
+      navigate("/area-cliente");
     } catch (err) {
-      alert("Erro no login: " + err.response?.data?.message || "Erro desconhecido");
+      alert(
+        "Erro no login: " + err.response?.data?.message || "Erro desconhecido"
+      );
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Link,
   Navigate,
@@ -9,7 +9,7 @@ import {
 import {
   User,
   ShoppingBag,
-  Heart,
+  // Heart,
   MapPin,
   LogOut,
   Home,
@@ -17,6 +17,7 @@ import {
   X,
   Bell,
 } from "lucide-react";
+import api from "../../src/services/api";
 
 export default function ClientArea() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,14 +26,36 @@ export default function ClientArea() {
 
   // Simulando um usuário logado - em uma aplicação real, isso viria de um contexto de autenticação
   // const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [user, setUser] = useState(null);
 
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      const response = await api.get("/api/usuario", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = response.data;
+      console.log(user);
+      setUser(user);
+    } catch (err) {
+      err.response?.data?.message || "Erro desconhecido";
+    }
+  };
   const handleLogout = () => {
-    
     localStorage.removeItem("token");
     navigate("/login");
-    
   };
 
+  useEffect(() => {
+    getUserData();
+  }, []);
   // if (!isLoggedIn) {
   //   return <Navigate to="/login" />;
   // }
@@ -82,8 +105,36 @@ export default function ClientArea() {
             >
               <Home className="h-5 w-5" />
             </Link>
-            <div className="h-8 w-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-medium">
-              JD
+            <div className="relative group">
+              <button className="flex items-center space-x-2 p-2 rounded-full :bg-amber-100 transition-colors ">
+                <div className="h-8 w-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-medium">
+                  {user?.nome?.charAt(0) || "U"}
+                </div>
+                <span className="hidden md:inline font-medium text-gray-700">
+                  {user?.nome?.split(" ")[0] || "Usuário"}
+                </span>
+              </button>
+              {/* Dropdown Menu */}
+              {/* <div className="z-10 hidden absolute bg-white rounded-md shadow-lg right-0 w-48  py-1 group-hover:block">
+                <Link
+                  to="/area-cliente"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                >
+                  Minha Conta
+                </Link>
+                <Link
+                  to="/area-cliente"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                >
+                  Meus Pedidos
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
+                >
+                  Sair
+                </button>
+              </div> */}
             </div>
           </div>
         </div>
@@ -102,10 +153,10 @@ export default function ClientArea() {
         <aside
           className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform transition-transform duration-200 ease-in-out 
             md:absolute md:h-full md:translate-x-0 md:shadow-none border-black ${
-            isSidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full md:translate-x-0"
-          }`}
+              isSidebarOpen
+                ? "translate-x-0"
+                : "-translate-x-full md:translate-x-0"
+            }`}
         >
           <div className="p-4 border-b md:hidden flex justify-between items-center">
             <span className="font-bold text-amber-800">Menu</span>
@@ -124,7 +175,7 @@ export default function ClientArea() {
                 JD
               </div>
               <div>
-                <div className="font-medium text-amber-900">João da Silva</div>
+                <div className="font-medium text-amber-900">{user.nome}</div>
                 <div className="text-sm text-amber-600">Cliente desde 2023</div>
               </div>
             </div>
