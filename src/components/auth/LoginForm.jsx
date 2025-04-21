@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import api from "../../services/api";
 
@@ -29,7 +29,7 @@ export default function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Aqui você implementaria a lógica de autenticação
-    console.log("Login com:", { email, password, rememberMe });
+    // console.log("Login com:", { email, password, rememberMe });
   };
 
   return (

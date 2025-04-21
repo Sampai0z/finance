@@ -24,7 +24,6 @@ export default function ClientArea() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Simulando um usuário logado - em uma aplicação real, isso viria de um contexto de autenticação
   // const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [user, setUser] = useState(null);
 
@@ -42,12 +41,12 @@ export default function ClientArea() {
       });
 
       const user = response.data;
-      console.log(user);
       setUser(user);
     } catch (err) {
       err.response?.data?.message || "Erro desconhecido";
     }
   };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -175,10 +174,10 @@ export default function ClientArea() {
                 JD
               </div>
               <div>
-                <div className="font-medium text-amber-900">
-                  {user.nomeCompleto}
+                <div className="font-medium text-amber-900">{user?.nome}</div>
+                <div className="text-sm text-amber-600">
+                  Cliente desde {new Date(user?.data_cadastro).getFullYear()}
                 </div>
-                <div className="text-sm text-amber-600">Cliente desde 2023</div>
               </div>
             </div>
 

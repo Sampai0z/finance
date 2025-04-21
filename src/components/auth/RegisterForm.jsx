@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import api from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
+    nome: "",
     email: "",
-    phone: "",
     password: "",
+    telefone: "",
     confirmPassword: "",
-    address: "",
+    cidade: "",
+    endereco: "",
+    cep: "",
     terms: false,
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -16,37 +21,72 @@ export default function RegisterForm() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+
+    if (name === "cep") {
+      // Máscara para formatar o CEP
+      const formattedValue = value
+        .replace(/\D/g, "") // Remove todos os caracteres não numéricos
+        .replace(/^(\d{5})(\d{3})$/, "$1-$2");
+      setFormData({
+        ...formData,
+        [name]: formattedValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Validar se as senhas coincidem
     if (formData.password !== formData.confirmPassword) {
       alert("As senhas não coincidem!");
       return;
     }
-    // Aqui você implementaria a lógica de registro
-    console.log("Registro com:", formData);
+    // Validar CEP
+    const isCepValid = /^[0-9]{5}-[0-9]{3}$/.test(formData.cep);
+    if (!isCepValid) {
+      alert("CEP inválido! O formato correto é 00000-000.");
+      return;
+    }
+
+    try {
+      const response = await api.post("/api/clientes/cadastro", formData);
+
+      const { token } = response.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+        navigate("/");
+      } else {
+        throw new Error("Token não recebido");
+      }
+    } catch (err) {
+      console.error(
+        "Erro ao registrar:",
+        err.response?.data?.message || "Erro desconhecido"
+      );
+      alert("Erro ao cadastrar, tente novamente!");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label
-          htmlFor="name"
+          htmlFor="nome"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           Nome Completo
         </label>
         <input
-          id="name"
-          name="name"
+          id="nome"
+          name="nome"
           type="text"
-          value={formData.name}
+          value={formData.nome}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           placeholder="Seu nome completo"
@@ -75,16 +115,16 @@ export default function RegisterForm() {
 
       <div>
         <label
-          htmlFor="phone"
+          htmlFor="telefone"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           Telefone
         </label>
         <input
-          id="phone"
-          name="phone"
+          id="telefone"
+          name="telefone"
           type="tel"
-          value={formData.phone}
+          value={formData.telefone}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           placeholder="(00) 00000-0000"
@@ -154,19 +194,55 @@ export default function RegisterForm() {
 
       <div>
         <label
-          htmlFor="address"
+          htmlFor="endereco"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           Endereço
         </label>
         <input
-          id="address"
-          name="address"
+          id="endereco"
+          name="endereco"
           type="text"
-          value={formData.address}
+          value={formData.endereco}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-          placeholder="Rua, número, bairro, cidade"
+          placeholder="Rua, número, endereco"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="cidade"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Cidade
+        </label>
+        <input
+          id="cidade"
+          name="cidade"
+          type="text"
+          value={formData.cidade}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="Cidade"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="cep"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          CEP
+        </label>
+        <input
+          id="cep"
+          name="cep"
+          type="text"
+          value={formData.cep}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="00000-000"
           required
         />
       </div>

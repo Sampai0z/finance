@@ -23,7 +23,6 @@ export default function HomePage() {
       });
 
       const user = response.data;
-      console.log(user);
       setUser(user);
     } catch (err) {
       err.response?.data?.message || "Erro desconhecido";
