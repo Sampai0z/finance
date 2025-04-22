@@ -81,7 +81,7 @@ export default function ProductGrid() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="w-3/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {salgadosData.map((product) => (
         <ProductCard
           key={product.id}

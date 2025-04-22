@@ -58,7 +58,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="bg-white p-6 rounded-lg shadow-sm border-2 border-black">
       <div className="space-y-4">
         {cartItems.map((item) => {
           const product = salgadosData.find((p) => p.id === item.id);
