@@ -125,8 +125,8 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="flex-grow">
-        <section className="bg-gradient-to-r from-amber-50 to-amber-100 py-16">
+      <main className="flex-grow flex-column">
+        <section className="bg-gradient-to-r from-amber-50 to-amber-100 py-4">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-amber-800 mb-4">
               Salgados Frescos e Deliciosos
@@ -135,17 +135,17 @@ export default function HomePage() {
               Peça agora os melhores salgados da cidade. Entregamos em até 40
               minutos ou sua encomenda é grátis!
             </p>
-            <Link
+            {/* <Link
               href="#produtos"
               className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-8 rounded-lg transition-colors"
             >
               Ver Cardápio
-            </Link>
+            </Link> */}
           </div>
         </section>
 
-        <section id="produtos" className="py-16 bg-white">
-          <div className="container mx-auto px-4">
+        <section id="produtos" className="py-8 bg-white">
+          <div className="flex flex-col items-center mx-auto px-4 ">
             <h2 className="text-3xl font-bold text-center mb-12 text-amber-800">
               Nosso Cardápio
             </h2>
