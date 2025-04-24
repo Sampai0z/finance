@@ -4,60 +4,51 @@ import ProductCard from "./ProductCard";
 // Dados simulados dos produtos
 const salgadosData = [
   {
-    id: 1,
     name: "Coxinha de Frango",
-    description: "Coxinha tradicional de frango com catupiry",
-    price: 5.5,
-    image: "/placeholder.svg?height=200&width=200",
+    price: 1.0,
+    category: "salgado",
   },
   {
-    id: 2,
-    name: "Pastel de Carne",
-    description: "Pastel crocante recheado com carne moída temperada",
-    price: 6.0,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Batatinha Recheada",
+    price: 1.0,
+    category: "salgado",
   },
   {
-    id: 3,
-    name: "Kibe",
-    description: "Kibe tradicional com recheio de carne moída e trigo",
-    price: 5.0,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Quibe Recheado",
+    price: 1.0,
+    category: "salgado",
   },
   {
-    id: 4,
-    name: "Bolinha de Queijo",
-    description: "Bolinha crocante recheada com queijo",
-    price: 4.5,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Enroladinho de Queijo",
+    price: 1.0,
+    category: "salgado",
   },
   {
-    id: 5,
-    name: "Esfiha de Carne",
-    description: "Esfiha aberta com recheio de carne moída temperada",
-    price: 5.5,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Enroladinho de Salsicha",
+    price: 1.0,
+    category: "salgado",
   },
   {
-    id: 6,
-    name: "Risole de Presunto e Queijo",
-    description: "Risole crocante recheado com presunto e queijo",
-    price: 5.0,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Mini Pastel",
+    price: 1.0,
+    category: "salgado",
+  },
+];
+const bebidas = [
+  {
+    name: "Suco",
+    price: 2.0,
+    category: "bebida",
   },
   {
-    id: 7,
-    name: "Empada de Frango",
-    description: "Empada com massa amanteigada e recheio de frango",
-    price: 6.5,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Refrigerante",
+    price: 3.0,
+    category: "bebida",
   },
   {
-    id: 8,
-    name: "Pão de Queijo",
-    description: "Pão de queijo mineiro tradicional",
-    price: 3.5,
-    image: "/placeholder.svg?height=200&width=200",
+    name: "Água",
+    price: 2.0,
+    category: "bebida",
   },
 ];
 
@@ -81,14 +72,28 @@ export default function ProductGrid() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {salgadosData.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onAddToCart={() => addToCart(product.id)}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {salgadosData.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={() => addToCart(product.id)}
+          />
+        ))}
+      </div>
+      <h2 className="text-3xl font-bold text-center m-5  p-5 text-amber-800">
+        Bebidas
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {bebidas.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={() => addToCart(product.id)}
+          />
+        ))}
+      </div>
+    </>
   );
 }
