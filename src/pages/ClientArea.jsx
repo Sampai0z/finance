@@ -182,7 +182,7 @@ export default function ClientArea() {
             </div>
 
             <nav className="space-y-1 min-h-64 ">
-              <Link
+              {/* <Link
                 to="/cliente"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
                   isActive("/cliente")
@@ -193,25 +193,11 @@ export default function ClientArea() {
               >
                 <Home className="h-5 w-5" />
                 <span>Dashboard</span>
-              </Link>
-
+              </Link> */}
               <Link
-                to="/cliente/pedidos"
+                to="/area-cliente/perfil"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/cliente/pedidos")
-                    ? "bg-amber-100 text-amber-900"
-                    : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
-                }`}
-                onClick={closeSidebar}
-              >
-                <ShoppingBag className="h-5 w-5" />
-                <span>Meus Pedidos</span>
-              </Link>
-
-              <Link
-                to="/cliente/perfil"
-                className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/cliente/perfil")
+                  isActive("/area-cliente/perfil")
                     ? "bg-amber-100 text-amber-900"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
                 }`}
@@ -222,9 +208,22 @@ export default function ClientArea() {
               </Link>
 
               <Link
-                to="/cliente/enderecos"
+                to="/area-cliente/pedidos"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/cliente/enderecos")
+                  isActive("/area-cliente/pedidos")
+                    ? "bg-amber-100 text-amber-900"
+                    : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
+                }`}
+                onClick={closeSidebar}
+              >
+                <ShoppingBag className="h-5 w-5" />
+                <span>Meus Pedidos</span>
+              </Link>
+
+              <Link
+                to="/area-cliente/enderecos"
+                className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                  isActive("/area-cliente/enderecos")
                     ? "bg-amber-100 text-amber-900"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
                 }`}

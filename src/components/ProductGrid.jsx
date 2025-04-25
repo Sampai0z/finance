@@ -72,7 +72,6 @@ export default function ProductGrid() {
   };
 
   return (
-<<<<<<< HEAD
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {salgadosData.map((product) => (
@@ -89,23 +88,12 @@ export default function ProductGrid() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {bebidas.map((product) => (
           <ProductCard
-            key={product.id}
+            key={bebidas.id}
             product={product}
             onAddToCart={() => addToCart(product.id)}
           />
         ))}
       </div>
     </>
-=======
-    <div className="w-3/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {salgadosData.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onAddToCart={() => addToCart(product.id)}
-        />
-      ))}
-    </div>
->>>>>>> 3e2245d09547233dfdad871ba1a103c9c0221b09
   );
 }
