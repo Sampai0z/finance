@@ -74,7 +74,7 @@ export default function ClientArea() {
   return (
     <div className="min-h-screen bg-amber-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-10">
+      <header className="bg-white w-full border-b sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center">
             <button
@@ -139,10 +139,10 @@ export default function ClientArea() {
         </div>
       </header>
 
-      <div className="flex flex-1 relative">
+      <div className="flex flex-1 relative md:relative md:w-full md:max-h-[90vh] overflow-y-hidden">
         {/* Sidebar - Mobile Overlay */}
         <div
-          className={`fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden transition-opacity duration-200 ${
+          className={`fixed inset-0 bg-black bg-opacity-50 z-20 transition-opacity duration-200 ${
             isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           onClick={closeSidebar}
@@ -150,8 +150,8 @@ export default function ClientArea() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform transition-transform duration-200 ease-in-out 
-            md:absolute md:h-full md:translate-x-0 md:shadow-none border-black ${
+          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-20 transform transition-transform duration-200 ease-in-out 
+            md:sticky md:z-0 md:w-auto md:min-h-[90vh] md:translate-x-0 md:shadow-none md:border-black md:border-0 ${
               isSidebarOpen
                 ? "translate-x-0"
                 : "-translate-x-full md:translate-x-0"
@@ -181,7 +181,7 @@ export default function ClientArea() {
               </div>
             </div>
 
-            <nav className="space-y-1 min-h-64 ">
+            <nav className="space-y-0 min-h-64 ">
               <Link
                 to="/cliente/dashboard"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
@@ -245,10 +245,7 @@ export default function ClientArea() {
                 <Heart className="h-5 w-5" />
                 <span>Favoritos</span>
               </Link> */}
-            </nav>
-          </div>
-
-          <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="left-0 right-0 p-4">
             <button
               onClick={handleLogout}
               className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-amber-800 w-full"
@@ -257,11 +254,14 @@ export default function ClientArea() {
               <span>Sair</span>
             </button>
           </div>
+            </nav>
+          </div>
+
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-4">
-          <div className="container mx-auto">
+        <main className=" md:h-auto md:overflow-y-auto flex-1 p-4">
+          <div className="md:overflow-y-scroll md:relative container mx-auto">
             <Outlet />
           </div>
         </main>

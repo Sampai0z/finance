@@ -105,7 +105,7 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 relative md:relative md:w-full md:max-h-[90vh] overflow-y-hidden">
         {/* Sidebar - Mobile Overlay */}
         <div
           className={`fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden transition-opacity duration-200 ${
@@ -116,8 +116,11 @@ export default function AdminLayout() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-20 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 
+            md:sticky md:w-auto md:min-h-[90vh] md:translate-x-0 md:shadow-none md:border-black md:border-0 ${
+              isSidebarOpen 
+                ? "translate-x-0" 
+                : "-translate-x-full"
           }`}
         >
           <div className="p-4 border-b lg:hidden flex justify-between items-center">
@@ -212,22 +215,22 @@ export default function AdminLayout() {
                 <Settings className="h-5 w-5" />
                 <span>Configurações</span>
               </Link>
+              <div className="">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-amber-800 w-full"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Sair</span>
+                </button>
+              </div>
             </nav>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-amber-800 w-full"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Sair</span>
-            </button>
-          </div>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 lg:p-6">
+        <main className="md:h-auto md:overflow-y-auto flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>

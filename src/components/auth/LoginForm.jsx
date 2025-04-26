@@ -20,6 +20,7 @@ export default function LoginForm() {
       localStorage.setItem("token", token);
       navigate("/area-cliente");
     } catch (err) {
+      console.log("Erro no login:", err);
       alert(
         "Erro no login: " + err.response?.data?.message || "Erro desconhecido"
       );
