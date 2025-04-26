@@ -114,15 +114,15 @@ export default function ClientArea() {
                 </span>
               </button>
               {/* Dropdown Menu */}
-              {/* <div className="z-10 hidden absolute bg-white rounded-md shadow-lg right-0 w-48  py-1 group-hover:block">
+              <div className="z-10 hidden absolute bg-white rounded-md shadow-lg right-0 w-48  py-1 group-hover:block">
                 <Link
-                  to="/area-cliente"
+                  to="/cliente/dashboard"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
                 >
                   Minha Conta
                 </Link>
                 <Link
-                  to="/area-cliente"
+                  to="/cliente/pedidos"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
                 >
                   Meus Pedidos
@@ -133,7 +133,7 @@ export default function ClientArea() {
                 >
                   Sair
                 </button>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +171,7 @@ export default function ClientArea() {
           <div className="p-4 border-r-2 border-s-stone-200">
             <div className="flex items-center space-x-3 mb-6 p-3 bg-amber-50 rounded-lg">
               <div className="h-10 w-10 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-medium">
-                JD
+                {user?.nome?.charAt(0) || "U"}
               </div>
               <div>
                 <div className="font-medium text-amber-900">{user?.nome}</div>
@@ -182,10 +182,10 @@ export default function ClientArea() {
             </div>
 
             <nav className="space-y-1 min-h-64 ">
-              {/* <Link
-                to="/cliente"
+              <Link
+                to="/cliente/dashboard"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/cliente")
+                  isActive("/cliente/dashboard")
                     ? "bg-amber-100 text-amber-900"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
                 }`}
@@ -193,11 +193,11 @@ export default function ClientArea() {
               >
                 <Home className="h-5 w-5" />
                 <span>Dashboard</span>
-              </Link> */}
+              </Link>
               <Link
-                to="/area-cliente/perfil"
+                to="/cliente/perfil"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/area-cliente/perfil")
+                  isActive("/cliente/perfil")
                     ? "bg-amber-100 text-amber-900"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
                 }`}
@@ -208,9 +208,9 @@ export default function ClientArea() {
               </Link>
 
               <Link
-                to="/area-cliente/pedidos"
+                to="/cliente/pedidos"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/area-cliente/pedidos")
+                  isActive("/cliente/pedidos")
                     ? "bg-amber-100 text-amber-900"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
                 }`}
@@ -221,9 +221,9 @@ export default function ClientArea() {
               </Link>
 
               <Link
-                to="/area-cliente/enderecos"
+                to="/cliente/enderecos"
                 className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive("/area-cliente/enderecos")
+                  isActive("/cliente/enderecos")
                     ? "bg-amber-100 text-amber-900"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-800"
                 }`}

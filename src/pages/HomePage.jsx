@@ -2,13 +2,13 @@ import { ShoppingCart } from "lucide-react";
 import ProductGrid from "../components/ProductGrid";
 import Cart from "../components/Cart";
 import api from "../../src/services/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
   const getUserData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -45,7 +45,7 @@ export default function HomePage() {
     localStorage.removeItem("user");
     setIsLogin(false);
     setUser(null);
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
@@ -93,13 +93,13 @@ export default function HomePage() {
                 {/* Dropdown Menu */}
                 <div className="z-10 hidden absolute bg-white rounded-md shadow-lg right-0 w-48  py-1 group-hover:block">
                   <Link
-                    to="/area-cliente"
+                    to="/cliente/dashboard"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
                   >
                     Minha Conta
                   </Link>
                   <Link
-                    to="/area-cliente"
+                    to="/cliente/pedidos"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50"
                   >
                     Meus Pedidos

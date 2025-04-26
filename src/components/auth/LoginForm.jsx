@@ -28,8 +28,6 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aqui você implementaria a lógica de autenticação
-    // console.log("Login com:", { email, password, rememberMe });
   };
 
   return (
