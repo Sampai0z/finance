@@ -20,6 +20,12 @@ import AdminDashboard from "./components/admin/Dashboard.jsx";
 import OrdersList from "./components/admin/OrdersList.jsx";
 import OrderDetail from "./components/admin/OrderDetail.jsx";
 import AdminPrivateRoute from "./components/AdminPrivateRoute.jsx";
+{
+  /* Rotas carrinho e checkout */
+}
+import CartPage from "./pages/CartPage.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage.jsx";
 
 function App() {
   return (
@@ -67,7 +73,32 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="carrinho"
+          element={
+            <PrivateRoute>
+              <CartPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="checkout"
+          element={
+            <PrivateRoute>
+              <CheckoutPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="pedido-confirmado"
+          element={
+            <PrivateRoute>
+              <OrderConfirmationPage />
+            </PrivateRoute>
+          }
+        />
       </Route>
+
       {/* Rotas administrativas */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route
