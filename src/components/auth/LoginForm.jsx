@@ -18,7 +18,7 @@ export default function LoginForm() {
 
       const { token } = response.data;
       localStorage.setItem("token", token);
-      navigate("/area-cliente");
+      navigate("/cliente");
     } catch (err) {
       console.log("Erro no login:", err);
       alert(

@@ -1,14 +1,21 @@
 import { ShoppingCart } from "lucide-react";
 import ProductGrid from "../components/ProductGrid";
-import Cart from "../components/Cart";
+import Cart from "../components/CartHomePage";
+import { useCart } from "../components/CartContext";
 import api from "../../src/services/api";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
+
+  const { addToCart } = useCart();
+  const { cartItems, setCartItems } = useCart();
+
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
   const getUserData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -75,9 +82,9 @@ export default function HomePage() {
               className="relative p-2 rounded-full hover:bg-amber-100"
             >
               <ShoppingCart className="h-6 w-6 text-amber-600" />
-              <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                3
-              </span>
+              {/* <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                
+              </span> */}
             </Link>
 
             {isLogin ? (
@@ -149,110 +156,112 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold text-center mb-12 text-amber-800">
               Nosso Cardápio
             </h2>
-            <ProductGrid />
+            <ProductGrid  onAddToCart={addToCart}/>
           </div>
         </section>
+        {!token && (
 
-        <section className="py-16 bg-amber-50">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold mb-6 text-amber-800">
-                Seu Pedido
-              </h2>
-              <Cart />
+          <section className="py-16 bg-amber-50">
+            <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+              <div className="md:w-1/2">
+                <h2 className="text-3xl font-bold mb-6 text-amber-800">
+                  Seu Pedido
+                </h2>
+                <Cart cartItems={cartItems} setCartItems={setCartItems} />
+              </div>
+              <div className="md:w-1/2 bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold mb-4 text-amber-800">
+                  Informações de Entrega
+                </h3>
+                <form className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Nome Completo
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="Seu nome"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Telefone
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="(00) 00000-0000"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="address"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Endereço
+                    </label>
+                    <input
+                      type="text"
+                      id="address"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="Rua, número, bairro"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="complement"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Complemento
+                    </label>
+                    <input
+                      type="text"
+                      id="complement"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      placeholder="Apto, bloco, referência"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="payment"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Forma de Pagamento
+                    </label>
+                    <select
+                      id="payment"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      required
+                    >
+                      <option value="">Selecione uma opção</option>
+                      <option value="dinheiro">Dinheiro</option>
+                      <option value="cartao">Cartão na entrega</option>
+                      <option value="pix">PIX</option>
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                  >
+                    Finalizar Pedido
+                  </button>
+                </form>
+              </div>
             </div>
-            <div className="md:w-1/2 bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4 text-amber-800">
-                Informações de Entrega
-              </h3>
-              <form className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Nome Completo
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    placeholder="Seu nome"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Telefone
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    placeholder="(00) 00000-0000"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Endereço
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    placeholder="Rua, número, bairro"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="complement"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Complemento
-                  </label>
-                  <input
-                    type="text"
-                    id="complement"
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    placeholder="Apto, bloco, referência"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="payment"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Forma de Pagamento
-                  </label>
-                  <select
-                    id="payment"
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    required
-                  >
-                    <option value="">Selecione uma opção</option>
-                    <option value="dinheiro">Dinheiro</option>
-                    <option value="cartao">Cartão na entrega</option>
-                    <option value="pix">PIX</option>
-                  </select>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-                >
-                  Finalizar Pedido
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       <footer className="bg-amber-800 text-white py-8">

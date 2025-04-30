@@ -3,29 +3,24 @@ import { Trash2 } from "lucide-react"; // Descomente se quiser usar o ícone
 // import { Button } from "@/components/ui/button";
 
 // Dados simulados dos produtos
-const salgadosData = [
-  { id: 1, name: "Coxinha de Frango", price: 5.5 },
-  { id: 2, name: "Pastel de Carne", price: 6.0 },
-  { id: 3, name: "Kibe", price: 5.0 },
-];
+import { allProducts } from "../services/product";
 
-export default function Cart() {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, quantity: 2 },
-    { id: 2, quantity: 1 },
-  ]);
+export default function Cart({cartItems, setCartItems}) {
+
   const [total, setTotal] = useState(0);
-
+  console.log(total)
+  
   useEffect(() => {
     const newTotal = cartItems.reduce((sum, item) => {
-      const product = salgadosData.find((p) => p.id === item.id);
+      const product = allProducts.find((p) => p.id === item.id);
       return sum + (product?.price || 0) * item.quantity;
     }, 0);
-
-    // Adiciona a taxa de entrega ao total
-    setTotal(newTotal + 5); // Taxa de entrega fixa
+    
+    setTotal(newTotal + 5);
   }, [cartItems]);
-
+  
+  console.log(total)
+  
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) {
       removeItem(id);
@@ -43,16 +38,18 @@ export default function Cart() {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+ 
+
   if (cartItems.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow-sm text-center">
         <p className="text-gray-500">Seu carrinho está vazio</p>
-        <Button
-          className="mt-4 bg-amber-600 hover:bg-amber-700"
+        <button
+          className="mt-4 px-2 rounded-md md:rounded-lg text-white font-semibold bg-amber-600 hover:bg-amber-700"
           onClick={() => (window.location.href = "#produtos")}
         >
           Ver Produtos
-        </Button>
+        </button>
       </div>
     );
   }
@@ -61,7 +58,8 @@ export default function Cart() {
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <div className="space-y-4">
         {cartItems.map((item) => {
-          const product = salgadosData.find((p) => p.id === item.id);
+          const product = allProducts.find((p) => p.id === item.id);
+          console.log(product)
           if (!product) return null;
 
           return (
@@ -71,7 +69,7 @@ export default function Cart() {
             >
               <div>
                 <h4 className="font-medium">{product.name}</h4>
-                <p className="text-amber-600">R$ {product.price.toFixed(2)}</p>
+                <p className="text-amber-600">R$ {product.price}</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex items-center">

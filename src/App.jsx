@@ -26,115 +26,119 @@ import AdminPrivateRoute from "./components/AdminPrivateRoute.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import OrderConfirmationPage from "./pages/OrderConfirmationPage.jsx";
+import { CartProvider } from "./components/CartContext.jsx";
+
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<HomePage />} />
-      {/* Rotas Clientes */}
-      <Route
-        path="/cliente"
-        element={
-          <PrivateRoute>
-            <ClientArea />
-          </PrivateRoute>
-        }
-      >
+  return (  
+    <CartProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        {/* Rotas Clientes */}
         <Route
-          path="perfil"
+          path="/cliente"
           element={
             <PrivateRoute>
-              <Profile />
+              <ClientArea />
             </PrivateRoute>
           }
-        />
-        <Route
-          path="dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="pedidos"
-          element={
-            <PrivateRoute>
-              <OrderHistory />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="enderecos"
-          element={
-            <PrivateRoute>
-              <Addresses />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="carrinho"
-          element={
-            <PrivateRoute>
-              <CartPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="checkout"
-          element={
-            <PrivateRoute>
-              <CheckoutPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="pedido-confirmado"
-          element={
-            <PrivateRoute>
-              <OrderConfirmationPage />
-            </PrivateRoute>
-          }
-        />
-      </Route>
+        >
+          <Route
+            path="perfil"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="pedidos"
+            element={
+              <PrivateRoute>
+                <OrderHistory />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="enderecos"
+            element={
+              <PrivateRoute>
+                <Addresses />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="carrinho"
+            element={
+              <PrivateRoute>
+                <CartPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="checkout"
+            element={
+              <PrivateRoute>
+                <CheckoutPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="pedido-confirmado"
+            element={
+              <PrivateRoute>
+                <OrderConfirmationPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
 
-      {/* Rotas administrativas */}
-      <Route path="/admin/login" element={<AdminLoginPage />} />
-      <Route
-        path="/admin"
-        element={
-          <AdminPrivateRoute>
-            <AdminLayout />
-          </AdminPrivateRoute>
-        }
-      >
+        {/* Rotas administrativas */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route
-          path="dashboard"
+          path="/admin"
           element={
             <AdminPrivateRoute>
-              <AdminDashboard />
+              <AdminLayout />
             </AdminPrivateRoute>
           }
-        />
-        <Route
-          path="pedidos"
-          element={
-            <AdminPrivateRoute>
-              <OrdersList />
-            </AdminPrivateRoute>
-          }
-        />
-        <Route
-          path="pedidos/:id"
-          element={
-            <AdminPrivateRoute>
-              <OrderDetail />
-            </AdminPrivateRoute>
-          }
-        />
-      </Route>
-    </Routes>
+        >
+          <Route
+            path="dashboard"
+            element={
+              <AdminPrivateRoute>
+                <AdminDashboard />
+              </AdminPrivateRoute>
+            }
+          />
+          <Route
+            path="pedidos"
+            element={
+              <AdminPrivateRoute>
+                <OrdersList />
+              </AdminPrivateRoute>
+            }
+          />
+          <Route
+            path="pedidos/:id"
+            element={
+              <AdminPrivateRoute>
+                <OrderDetail />
+              </AdminPrivateRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </CartProvider>
   );
 }
 

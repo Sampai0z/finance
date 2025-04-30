@@ -11,31 +11,33 @@ import {
   Truck,
   Clock,
 } from "lucide-react";
+import { useCart } from "../components/CartContext";
 // import Navbar from "../components/Navbar";
 
 // Dados simulados do carrinho
-const cartItems = [
-  {
-    id: 1,
-    name: "Coxinha de Frango",
-    price: 5.5,
-    quantity: 2,
-  },
-  {
-    id: 2,
-    name: "Pastel de Carne",
-    price: 6.0,
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "Kibe",
-    price: 5.0,
-    quantity: 3,
-  },
-];
+// const cartItems = [
+//   {
+//     id: 1,
+//     name: "Coxinha de Frango",
+//     price: 5.5,
+//     quantity: 2,
+//   },
+//   {
+//     id: 2,
+//     name: "Pastel de Carne",
+//     price: 6.0,
+//     quantity: 1,
+//   },
+//   {
+//     id: 3,
+//     name: "Kibe",
+//     price: 5.0,
+//     quantity: 3,
+//   },
+// ];
 
 export default function CheckoutPage() {
+  const { cartItems } = useCart();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -368,7 +370,7 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* Campos de cartão de crédito/débito */}
-                  {(formData.paymentMethod === "credit" ||
+                  {/* {(formData.paymentMethod === "credit" ||
                     formData.paymentMethod === "debit") && (
                     <div className="mt-4 p-4 border rounded-md bg-gray-50">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -457,7 +459,7 @@ export default function CheckoutPage() {
                         </div>
                       </div>
                     </div>
-                  )}
+                  )} */}
 
                   {/* Instruções para PIX */}
                   {formData.paymentMethod === "pix" && (

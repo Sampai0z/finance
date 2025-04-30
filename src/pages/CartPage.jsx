@@ -3,38 +3,39 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ShoppingBag, Trash2, Plus, Minus } from "lucide-react";
+import { useCart } from "../components/CartContext";
 // import Navbar from "../components/Navbar";
 
 // Dados simulados de produtos no carrinho
-const initialCartItems = [
-  {
-    id: 1,
-    name: "Coxinha de Frango",
-    description: "Coxinha tradicional de frango com catupiry",
-    price: 5.5,
-    image: "/placeholder.svg?height=200&width=200",
-    quantity: 2,
-  },
-  {
-    id: 2,
-    name: "Pastel de Carne",
-    description: "Pastel crocante recheado com carne moída temperada",
-    price: 6.0,
-    image: "/placeholder.svg?height=200&width=200",
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "Kibe",
-    description: "Kibe tradicional com recheio de carne moída e trigo",
-    price: 5.0,
-    image: "/placeholder.svg?height=200&width=200",
-    quantity: 3,
-  },
-];
+// const initialCartItems = [
+//   {
+//     id: 1,
+//     name: "Coxinha de Frango",
+//     description: "Coxinha tradicional de frango com catupiry",
+//     price: 5.5,
+//     image: "/placeholder.svg?height=200&width=200",
+//     quantity: 2,
+//   },
+//   {
+//     id: 2,
+//     name: "Pastel de Carne",
+//     description: "Pastel crocante recheado com carne moída temperada",
+//     price: 6.0,
+//     image: "/placeholder.svg?height=200&width=200",
+//     quantity: 1,
+//   },
+//   {
+//     id: 3,
+//     name: "Kibe",
+//     description: "Kibe tradicional com recheio de carne moída e trigo",
+//     price: 5.0,
+//     image: "/placeholder.svg?height=200&width=200",
+//     quantity: 3,
+//   },
+// ];
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const { cartItems, updateQuantity, removeItem } = useCart();
   const [subtotal, setSubtotal] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(5.0);
   const [couponCode, setCouponCode] = useState("");
@@ -51,19 +52,19 @@ export default function CartPage() {
     setSubtotal(newSubtotal);
   }, [cartItems]);
 
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) return;
+  // const updateQuantity = (id, newQuantity) => {
+  //   if (newQuantity < 1) return;
 
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
+  //   setCartItems((prevItems) =>
+  //     prevItems.map((item) =>
+  //       item.id === id ? { ...item, quantity: newQuantity } : item
+  //     )
+  //   );
+  // };
 
-  const removeItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
+  // const removeItem = (id) => {
+  //   setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  // };
 
   const applyCoupon = () => {
     if (!couponCode.trim()) {
