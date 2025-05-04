@@ -1,18 +1,30 @@
-"use client";
-
-import { Link } from "react-router-dom";
 import { CheckCircle, Home, ShoppingBag, Clock } from "lucide-react";
 // import Navbar from "../components/Navbar";
 
-export default function OrderConfirmationPage() {
-  // Dados simulados do pedido
-  const orderData = {
-    id: "PED12351",
-    date: new Date().toLocaleString("pt-BR"),
-    total: 32.5,
-    estimatedDelivery: "30-45 minutos",
-  };
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
+export default function OrderConfirmationPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pedido = location.state?.pedido || null;
+
+  // Se não houver pedido no state, volta para o checkout
+  if (!pedido) {
+    // opcional: exibir loading ou mensagem antes de redirecionar
+    navigate("/cliente/checkout");
+    return null;
+  }
+
+  const date = new Date(pedido.data_pedido);
+
+  // formata em "dd/mm/aaaa hh:mm"
+  const formattedDate = date.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* <Navbar /> */}
@@ -28,30 +40,31 @@ export default function OrderConfirmationPage() {
               Pedido Confirmado!
             </h1>
             <p className="text-gray-600 mb-6">
-              Seu pedido #{orderData.id} foi recebido e está sendo processado.
+              Seu pedido #{pedido.cod_pedido} foi recebido e está sendo
+              processado.
             </p>
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <div className="grid grid-cols-2 gap-4 text-left">
                 <div>
-                  <p className="text-sm text-gray-500">Número do Pedido</p>
-                  <p className="font-medium text-gray-800">{orderData.id}</p>
+                  <p className="text-sm text-gray-500">Número do pedido</p>
+                  <p className="font-medium text-gray-800">
+                    {pedido.cod_pedido}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Data</p>
-                  <p className="font-medium text-gray-800">{orderData.date}</p>
+                  <p className="font-medium text-gray-800">{formattedDate}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Total</p>
                   <p className="font-medium text-gray-800">
-                    R$ {orderData.total.toFixed(2)}
+                    R$ {pedido.preco_total.toFixed(2)}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Entrega Estimada</p>
-                  <p className="font-medium text-gray-800">
-                    {orderData.estimatedDelivery}
-                  </p>
+                  <p className="font-medium text-gray-800">1 a 3 dias uteis</p>
                 </div>
               </div>
             </div>

@@ -89,9 +89,10 @@ export default function CheckoutPage() {
       });
 
       console.log("Pedido criado:", pedidoResponse.data);
+      localStorage.removeItem("cartItems");
 
-      // Redireciona para página de confirmação
-      navigate("/cliente/pedido-confirmado");
+      const novoPedido = pedidoResponse.data.pedido;
+      navigate("/cliente/pedido-confirmado", { state: { pedido: novoPedido } });
     } catch (err) {
       console.error(err.response?.data?.message || "Erro ao enviar pedido");
     } finally {
