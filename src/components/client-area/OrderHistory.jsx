@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -7,44 +7,45 @@ import {
   Eye,
   ShoppingBag,
 } from "lucide-react";
+import api from "../../services/api";
 
-const ordersData = [
-  {
-    id: "PED12345",
-    date: "15/11/2023",
-    status: "Entregue",
-    total: 45.9,
-    items: ["2x Coxinha", "3x Kibe", "1x Refrigerante"],
-  },
-  {
-    id: "PED12344",
-    date: "10/11/2023",
-    status: "Entregue",
-    total: 32.5,
-    items: ["4x Esfiha", "2x Pastel", "1x Suco"],
-  },
-  {
-    id: "PED12343",
-    date: "05/11/2023",
-    status: "Entregue",
-    total: 28.0,
-    items: ["2x Pastel", "2x Coxinha", "1x Refrigerante"],
-  },
-  {
-    id: "PED12342",
-    date: "01/11/2023",
-    status: "Entregue",
-    total: 37.5,
-    items: ["1x Combo Festa", "1x Refrigerante"],
-  },
-  {
-    id: "PED12341",
-    date: "25/10/2023",
-    status: "Entregue",
-    total: 42.0,
-    items: ["3x Esfiha", "2x Kibe", "2x Coxinha"],
-  },
-];
+// const ordersData = [
+//   {
+//     id: "PED12345",
+//     date: "15/11/2023",
+//     status: "Entregue",
+//     total: 45.9,
+//     items: ["2x Coxinha", "3x Kibe", "1x Refrigerante"],
+//   },
+//   {
+//     id: "PED12344",
+//     date: "10/11/2023",
+//     status: "Entregue",
+//     total: 32.5,
+//     items: ["4x Esfiha", "2x Pastel", "1x Suco"],
+//   },
+//   {
+//     id: "PED12343",
+//     date: "05/11/2023",
+//     status: "Entregue",
+//     total: 28.0,
+//     items: ["2x Pastel", "2x Coxinha", "1x Refrigerante"],
+//   },
+//   {
+//     id: "PED12342",
+//     date: "01/11/2023",
+//     status: "Entregue",
+//     total: 37.5,
+//     items: ["1x Combo Festa", "1x Refrigerante"],
+//   },
+//   {
+//     id: "PED12341",
+//     date: "25/10/2023",
+//     status: "Entregue",
+//     total: 42.0,
+//     items: ["3x Esfiha", "2x Kibe", "2x Coxinha"],
+//   },
+// ];
 
 export default function OrderHistory() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -59,9 +60,47 @@ export default function OrderHistory() {
     }
   };
 
-  const filteredOrders = ordersData.filter((order) => {
+  const [orders, setOrders] = useState([]);
+  const [, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Usuário não autenticado");
+        }
+        const response = await api.get(
+          "http://localhost:3000/api/lista_pedidos_user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // tem que ser assim
+            },
+          }
+        );
+
+        const formattedOrders = response.data.data.map((order) => {
+          // Converte 'preco_total' para número antes de aplicar 'toFixed'
+          const totalPrice = parseFloat(order.preco_total);
+          return {
+            ...order,
+            preco_total: isNaN(totalPrice) ? "N/A" : totalPrice.toFixed(2), // Verifica se é um número válido
+          };
+        });
+
+        setOrders(formattedOrders);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  // formata em "dd/mm/aaaa hh:mm"
+
+  const filteredOrders = orders.filter((order) => {
     const matchesSearch =
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) || // Garantir que order.id é uma string
       order.items.some((item) =>
         item.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -123,18 +162,26 @@ export default function OrderHistory() {
                   <div className="flex flex-wrap justify-between items-center gap-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium text-amber-800">
-                        {order.id}
+                        {order.cod_pedido}
                       </span>
                       <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                        {order.status}
+                        {order.status
+                          .replace(/_/g, " ")
+                          .replace(/\b\w/g, (char) => char.toUpperCase())}
                       </span>
                     </div>
                     <div className="flex items-center space-x-4">
                       <span className="text-gray-500 text-sm">
-                        {order.date}
+                        {new Date(order.data_pedido).toLocaleString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                       <span className="font-bold text-amber-800">
-                        R$ {order.total.toFixed(2)}
+                        R$ {order.preco_total}
                       </span>
                       {expandedOrder === order.id ? (
                         <ChevronUp className="h-5 w-5 text-amber-600" />
@@ -145,18 +192,26 @@ export default function OrderHistory() {
                   </div>
                 </div>
 
-                {expandedOrder === order.id && (
+                {expandedOrder === order.id && order.itens_pedido && (
                   <div className="p-4 bg-amber-50 border-t">
                     <h3 className="font-medium text-amber-800 mb-2">
                       Itens do Pedido
                     </h3>
                     <ul className="list-disc list-inside text-gray-700 mb-4">
-                      {order.items.map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
+                      {order.itens_pedido ? (
+                        order.itens_pedido.map((item, index) => (
+                          <>
+                            <li key={index}>
+                              x{item.quantidade} {item.produto.nome}
+                            </li>
+                          </>
+                        ))
+                      ) : (
+                        <li>Sem itens disponíveis</li>
+                      )}
                     </ul>
 
-                    <div className="flex flex-wrap gap-4 mt-4">
+                    {/* <div className="flex flex-wrap gap-4 mt-4">
                       <button className="flex items-center space-x-1 text-amber-600 hover:text-amber-800">
                         <Eye className="h-4 w-4" />
                         <span>Ver Detalhes Completos</span>
@@ -165,7 +220,7 @@ export default function OrderHistory() {
                         <ShoppingBag className="h-4 w-4" />
                         <span>Pedir Novamente</span>
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>

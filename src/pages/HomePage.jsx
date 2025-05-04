@@ -1,6 +1,6 @@
 import { ShoppingCart } from "lucide-react";
 import ProductGrid from "../components/ProductGrid";
-// import Cart from "../components/CartHomePage";
+import Cart from "../components/CartHomePage";
 import { useCart } from "../components/CartContext";
 import api from "../../src/services/api";
 import { Link, useNavigate } from "react-router-dom";

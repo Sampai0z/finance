@@ -53,7 +53,6 @@ export default function Cart({ cartItems, setCartItems }) {
       <div className="space-y-4">
         {cartItems.map((item) => {
           const product = allProducts.find((p) => p.id === item.id);
-          console.log(product);
           if (!product) return null;
 
           return (

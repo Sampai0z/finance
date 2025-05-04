@@ -80,7 +80,6 @@ export default function CheckoutPage() {
         produtos: produtos,
       };
 
-      console.log(pedidoData);
       // Enviar pedido para API
       const pedidoResponse = await api.post("/api/pedidos", pedidoData, {
         headers: {
@@ -88,7 +87,6 @@ export default function CheckoutPage() {
         },
       });
 
-      console.log("Pedido criado:", pedidoResponse.data);
       localStorage.removeItem("cartItems");
 
       const novoPedido = pedidoResponse.data.pedido;
