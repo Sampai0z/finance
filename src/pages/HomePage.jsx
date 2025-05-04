@@ -1,19 +1,18 @@
 import { ShoppingCart } from "lucide-react";
 import ProductGrid from "../components/ProductGrid";
-import Cart from "../components/CartHomePage";
+// import Cart from "../components/CartHomePage";
 import { useCart } from "../components/CartContext";
 import api from "../../src/services/api";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
-
-  const { addToCart } = useCart();
-  const { cartItems, setCartItems } = useCart();
+  const { addToCart, cartItems, setCartItems } = useCart();
 
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
 
   const getUserData = async () => {
@@ -32,20 +31,18 @@ export default function HomePage() {
       const user = response.data;
       setUser(user);
     } catch (err) {
-      err.response?.data?.message || "Erro desconhecido";
+      console.error(err.response?.data?.message || "Erro desconhecido");
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    getUserData();
     if (token) {
       setIsLogin(true);
+      getUserData();
     } else {
       setIsLogin(false);
     }
-  }, []);
+  }, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -82,9 +79,9 @@ export default function HomePage() {
               className="relative p-2 rounded-full hover:bg-amber-100"
             >
               <ShoppingCart className="h-6 w-6 text-amber-600" />
-              {/* <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                
-              </span> */}
+              <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cartItems.length}
+              </span>
             </Link>
 
             {isLogin ? (
@@ -156,11 +153,10 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold text-center mb-12 text-amber-800">
               Nosso Cardápio
             </h2>
-            <ProductGrid  onAddToCart={addToCart}/>
+            <ProductGrid onAddToCart={addToCart} />
           </div>
         </section>
         {!token && (
-
           <section className="py-16 bg-amber-50">
             <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/2">

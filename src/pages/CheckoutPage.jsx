@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -12,32 +10,12 @@ import {
   Clock,
 } from "lucide-react";
 import { useCart } from "../components/CartContext";
-// import Navbar from "../components/Navbar";
-
-// Dados simulados do carrinho
-// const cartItems = [
-//   {
-//     id: 1,
-//     name: "Coxinha de Frango",
-//     price: 5.5,
-//     quantity: 2,
-//   },
-//   {
-//     id: 2,
-//     name: "Pastel de Carne",
-//     price: 6.0,
-//     quantity: 1,
-//   },
-//   {
-//     id: 3,
-//     name: "Kibe",
-//     price: 5.0,
-//     quantity: 3,
-//   },
-// ];
+import api from "../services/api";
+// Dados do carrinho
 
 export default function CheckoutPage() {
   const { cartItems } = useCart();
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -72,16 +50,53 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulação de envio do pedido
-    setTimeout(() => {
-      // Em uma aplicação real, você enviaria os dados para uma API
-      console.log("Pedido enviado:", { formData, items: cartItems, total });
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      // Buscar usuário autenticado
+      const response = await api.get("/api/usuario", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = response.data;
+
+      // Montar os dados para envio
+      const produtos = cartItems.map((item) => ({
+        produto_id: item.id, // ou item.produto_id dependendo da sua estrutura
+        quantidade: item.quantity,
+      }));
+
+      const pedidoData = {
+        cliente_id: user.id,
+        produtos: produtos,
+      };
+
+      console.log(pedidoData);
+      // Enviar pedido para API
+      const pedidoResponse = await api.post("/api/pedidos", pedidoData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Pedido criado:", pedidoResponse.data);
+
+      // Redireciona para página de confirmação
       navigate("/cliente/pedido-confirmado");
-    }, 2000);
+    } catch (err) {
+      console.error(err.response?.data?.message || "Erro ao enviar pedido");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

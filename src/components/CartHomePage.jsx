@@ -5,22 +5,18 @@ import { Trash2 } from "lucide-react"; // Descomente se quiser usar o ícone
 // Dados simulados dos produtos
 import { allProducts } from "../services/product";
 
-export default function Cart({cartItems, setCartItems}) {
-
+export default function Cart({ cartItems, setCartItems }) {
   const [total, setTotal] = useState(0);
-  console.log(total)
-  
+
   useEffect(() => {
     const newTotal = cartItems.reduce((sum, item) => {
       const product = allProducts.find((p) => p.id === item.id);
       return sum + (product?.price || 0) * item.quantity;
     }, 0);
-    
+
     setTotal(newTotal + 5);
   }, [cartItems]);
-  
-  console.log(total)
-  
+
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) {
       removeItem(id);
@@ -37,8 +33,6 @@ export default function Cart({cartItems, setCartItems}) {
   const removeItem = (id) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
-
- 
 
   if (cartItems.length === 0) {
     return (
@@ -59,7 +53,7 @@ export default function Cart({cartItems, setCartItems}) {
       <div className="space-y-4">
         {cartItems.map((item) => {
           const product = allProducts.find((p) => p.id === item.id);
-          console.log(product)
+          console.log(product);
           if (!product) return null;
 
           return (

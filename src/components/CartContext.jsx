@@ -13,9 +13,11 @@ export const CartProvider = ({ children }) => {
   });
 
   // Sempre que cartItems mudar, salva no localStorage
+  let itens = 0;
+
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+  }, [cartItems, itens]);
 
   const addToCart = (product) => {
     setCartItems((prev) => {
