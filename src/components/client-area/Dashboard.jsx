@@ -1,31 +1,68 @@
 import {
   ShoppingBag,
-  Heart,
   MapPin,
-  Clock,
-  ArrowRight,
   User,
 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import api from "../../services/api";
 
 export default function Dashboard() {
-  // Dados simulados para o dashboard
-  const recentOrders = [
-    {
-      id: "PED12345",
-      date: "15/11/2023",
-      status: "Entregue",
-      total: 45.9,
-      items: ["2x Coxinha", "3x Kibe", "1x Refrigerante"],
-    },
-    {
-      id: "PED12344",
-      date: "10/11/2023",
-      status: "Entregue",
-      total: 32.5,
-      items: ["4x Esfiha", "2x Pastel", "1x Suco"],
-    },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("todos");
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await api.get("http://localhost:3000/api/lista_pedidos_user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const rawData = response.data.data;
+  
+        // Mapeia os pedidos para a estrutura que o componente espera
+        const mappedOrders = rawData.map((pedido) => ({
+          id: pedido.cod_pedido,
+          date: new Date(pedido.data_pedido).toLocaleDateString("pt-BR"),
+          status: pedido.status,
+          preco_total: pedido.preco_total,
+          items: pedido.itens_pedido.map(
+            (item) => `${item.quantidade}x ${item.produto.nome}`
+          ),
+        }));
+  
+        console.log("Pedidos formatados:", mappedOrders);
+        setOrders(mappedOrders);
+      } catch (err) {
+        console.error("Erro ao buscar pedidos:", err);
+        setError(err.response?.data?.message || err.message);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
+  
+
+  const filteredOrders = orders.filter((order) => {
+    const matchesSearch =
+      String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (Array.isArray(order.items)
+        ? order.items.some((item) =>
+            item.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : String(order.items).toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesFilter =
+      filterStatus === "todos" ||
+      order.status.toLowerCase() === filterStatus.toLowerCase();
+
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="space-y-6">
@@ -34,121 +71,52 @@ export default function Dashboard() {
         <p className="text-amber-600">Bem-vindo à sua área de cliente.</p>
       </div>
 
-      {/* Cards informativos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 text-sm">Total de Pedidos</p>
-              <p className="text-2xl font-bold text-amber-800">12</p>
-            </div>
-            <div className="bg-amber-100 p-2 rounded-full">
-              <ShoppingBag className="h-6 w-6 text-amber-600" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <Link
-              to="/cliente/pedidos"
-              className="text-amber-600 text-sm flex items-center hover:underline"
-            >
-              Ver todos
-              <ArrowRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 text-sm">Itens Favoritos</p>
-              <p className="text-2xl font-bold text-amber-800">5</p>
-            </div>
-            <div className="bg-amber-100 p-2 rounded-full">
-              <Heart className="h-6 w-6 text-amber-600" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <Link
-              to="/cliente/favoritos"
-              className="text-amber-600 text-sm flex items-center hover:underline"
-            >
-              Ver todos
-              <ArrowRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 text-sm">Endereços Salvos</p>
-              <p className="text-2xl font-bold text-amber-800">2</p>
-            </div>
-            <div className="bg-amber-100 p-2 rounded-full">
-              <MapPin className="h-6 w-6 text-amber-600" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <Link
-              to="/cliente/enderecos"
-              className="text-amber-600 text-sm flex items-center hover:underline"
-            >
-              Gerenciar
-              <ArrowRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 text-sm">Tempo Médio de Entrega</p>
-              <p className="text-2xl font-bold text-amber-800">35 min</p>
-            </div>
-            <div className="bg-amber-100 p-2 rounded-full">
-              <Clock className="h-6 w-6 text-amber-600" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <span className="text-green-600 text-sm flex items-center">
-              Abaixo da média
-            </span>
-          </div>
-        </div>
+      {/* Input de busca e filtro */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <input
+          type="text"
+          placeholder="Buscar pedido..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border rounded px-3 py-2 w-full sm:w-1/2"
+        />
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="border rounded px-3 py-2 w-full sm:w-1/4"
+        >
+          <option value="todos">Todos</option>
+          <option value="pendente">Pendente</option>
+          <option value="entregue">Entregue</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
       </div>
 
-      {/* Pedidos recentes */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-amber-800">
-            Pedidos Recentes
-          </h2>
-          <Link
-            to="/cliente/pedidos"
-            className="text-amber-600 text-sm hover:underline"
-          >
-            Ver todos
-          </Link>
+      {filteredOrders.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500">Nenhum pedido encontrado.</p>
         </div>
-
+      ) : (
         <div className="space-y-4">
-          {recentOrders.map((order) => (
+          {filteredOrders.map((order) => (
             <div key={order.id} className="border rounded-lg p-4">
               <div className="flex flex-wrap justify-between items-start gap-2">
                 <div>
                   <div className="flex items-center space-x-2">
                     <span className="font-medium text-amber-800">
-                      {order.id}
+                      {order.id || "ID"}
                     </span>
                     <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                      {order.status}
+                      {order.status || "status"}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">{order.date}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {order.date || "Data não informada"}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-amber-800">
-                    R$ {order.total.toFixed(2)}
+                    R$ {order.preco_total || "0,00"}
                   </p>
                   <Link
                     to={`/cliente/pedidos/${order.id}`}
@@ -160,15 +128,16 @@ export default function Dashboard() {
               </div>
               <div className="mt-2">
                 <p className="text-sm text-gray-600">
-                  {order.items.join(", ")}
+                  {Array.isArray(order.items)
+                    ? order.items.join(", ")
+                    : order.items}
                 </p>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      )}
 
-      {/* Ações rápidas */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <h2 className="text-lg font-semibold text-amber-800 mb-4">
           Ações Rápidas

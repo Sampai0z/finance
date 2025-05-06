@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -10,15 +10,41 @@ import {
   Clock,
 } from "lucide-react";
 import { useCart } from "../components/CartContext";
-import api from "../services/api";
+// import api from "../services/api";
+import api from "../../src/services/api";
 // Dados do carrinho
 
 export default function CheckoutPage() {
   const { cartItems } = useCart();
+  const [user, setUser] = useState(null);
+
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      const response = await api.get("/api/usuario", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = response.data;
+      setUser(user);
+    } catch (err) {
+      err.response?.data?.message || "Erro desconhecido";
+    }
+  };
+  
+  useEffect(() => {
+      getUserData();
+    }, []);
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
+    name: user?.nome,
     phone: "",
     email: "",
     address: "",
@@ -28,13 +54,34 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zipCode: "",
-    paymentMethod: "credit",
+    paymentMethod: "pix",
     cardNumber: "",
     cardName: "",
     cardExpiry: "",
     cardCvv: "",
     notes: "",
   });
+
+  useEffect(() => {
+    if(user){
+      setFormData((prev) => ({
+        ...prev,
+        name: user.nome,
+        phone: user.telefone || "",
+        email: user.email || "",
+        address: user.endereco || "",
+        number: user.numero || "",
+        complement: user.complemento || "",
+        neighborhood: user.bairro || "",
+        city: user.cidade || "",
+        state: user.estado || "",
+        zipCode: user.cep || "",
+      }))
+    }
+  }, [user])
+
+  console.log(user)
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calcular valores
@@ -136,8 +183,9 @@ export default function CheckoutPage() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparentdisabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                   <div>
@@ -151,10 +199,11 @@ export default function CheckoutPage() {
                       type="tel"
                       id="phone"
                       name="phone"
-                      value={formData.phone}
+                      value={user?.telefone}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -168,10 +217,11 @@ export default function CheckoutPage() {
                       type="email"
                       id="email"
                       name="email"
-                      value={formData.email}
+                      value={user?.email}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                 </div>
@@ -194,9 +244,9 @@ export default function CheckoutPage() {
                       type="text"
                       id="address"
                       name="address"
-                      value={formData.address}
+                      value={user?.endereco}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
                     />
                   </div>
@@ -213,8 +263,9 @@ export default function CheckoutPage() {
                       name="number"
                       value={formData.number}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                   <div>
@@ -230,7 +281,8 @@ export default function CheckoutPage() {
                       name="complement"
                       value={formData.complement}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
+                      disabled
                     />
                   </div>
                   <div>
@@ -246,8 +298,9 @@ export default function CheckoutPage() {
                       name="neighborhood"
                       value={formData.neighborhood}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                   <div>
@@ -263,7 +316,7 @@ export default function CheckoutPage() {
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
                     />
                   </div>
@@ -280,7 +333,7 @@ export default function CheckoutPage() {
                       name="city"
                       value={formData.city}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparentdisabled:text-zinc-800 disabled:bg-zinc-200"
                       required
                     />
                   </div>
@@ -321,7 +374,7 @@ export default function CheckoutPage() {
                 <div className="space-y-4">
                   <div>
                     <div className="flex flex-col space-y-2">
-                      <label className="inline-flex items-center">
+                      {/* <label className="inline-flex items-center">
                         <input
                           type="radio"
                           name="paymentMethod"
@@ -349,7 +402,7 @@ export default function CheckoutPage() {
                           <Landmark className="h-5 w-5 mr-2 text-gray-600" />
                           Cartão de Débito
                         </span>
-                      </label>
+                      </label> */}
 
                       <label className="inline-flex items-center">
                         <input

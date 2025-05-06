@@ -245,15 +245,15 @@ export default function ClientArea() {
                 <Heart className="h-5 w-5" />
                 <span>Favoritos</span>
               </Link> */}
-          <div className="left-0 right-0 p-4">
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-amber-800 w-full"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Sair</span>
-            </button>
-          </div>
+              <div className="left-0 right-0 p-4">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-amber-800 w-full"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Sair</span>
+                </button>
+              </div>
             </nav>
           </div>
 

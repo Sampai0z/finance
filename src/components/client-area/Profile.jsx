@@ -236,18 +236,18 @@ export default function Profile() {
       </div>
 
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-amber-800 mb-6">Segurança</h2>
+        <h2 className="w-full text-lg font-semibold text-amber-800 mb-6 ">Segurança</h2>
 
-        <div className="space-y-4">
-          <button className="text-amber-600 hover:text-amber-800 font-medium">
+        <div className="space-y-4 space-x-20">
+          <button className="py-0.5 px-2 rounded-md text-amber-600 hover:text-amber-800 hover:bg-amber-300 font-medium">
             Alterar Senha
           </button>
 
-          <button className="text-amber-600 hover:text-amber-800 font-medium">
+          <button className="py-0.5 px-2 rounded-md text-amber-600 hover:text-amber-800 hover:bg-amber-300 font-medium">
             Ativar Autenticação de Dois Fatores
           </button>
 
-          <button className="text-red-600 hover:text-red-800 font-medium">
+          <button className="py-0.5 px-2 rounded-md text-red-600 hover:text-red-800 hover:bg-red-200 font-medium">
             Excluir Minha Conta
           </button>
         </div>
