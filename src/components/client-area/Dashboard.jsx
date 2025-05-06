@@ -26,7 +26,8 @@ export default function Dashboard() {
         });
   
         const rawData = response.data.data;
-  
+        
+        
         // Mapeia os pedidos para a estrutura que o componente espera
         const mappedOrders = rawData.map((pedido) => ({
           id: pedido.cod_pedido,
@@ -37,7 +38,7 @@ export default function Dashboard() {
             (item) => `${item.quantidade}x ${item.produto.nome}`
           ),
         }));
-  
+        
         console.log("Pedidos formatados:", mappedOrders);
         setOrders(mappedOrders);
       } catch (err) {
@@ -45,9 +46,10 @@ export default function Dashboard() {
         setError(err.response?.data?.message || err.message);
       }
     };
-  
+    
     fetchOrders();
   }, []);
+  
 
 
   return (
@@ -63,7 +65,7 @@ export default function Dashboard() {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-gray-500 text-sm">Total de Pedidos</p>
-              <p className="text-2xl font-bold text-amber-800">12</p>
+              <p className="text-2xl font-bold text-amber-800">{orders.length}</p>
             </div>
             <div className="bg-amber-100 p-2 rounded-full">
               <ShoppingBag className="h-6 w-6 text-amber-600" />

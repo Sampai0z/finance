@@ -141,7 +141,7 @@ export default function OrderHistory() {
             >
               <option value="todos">Todos os status</option>
               <option value="entregue">Entregue</option>
-              <option value="em andamento">Em andamento</option>
+              <option value="a_fazer">Em andamento</option>
               <option value="cancelado">Cancelado</option>
             </select>
           </div>
