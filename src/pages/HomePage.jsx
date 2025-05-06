@@ -74,7 +74,7 @@ export default function HomePage() {
             </Link>
           </nav>
           <div className="flex items-center space-x-4">
-            <Link
+          {isLogin ? (<Link
               to="/cliente/carrinho"
               className="relative p-2 rounded-full hover:bg-amber-100"
             >
@@ -82,7 +82,7 @@ export default function HomePage() {
               <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {cartItems.length}
               </span>
-            </Link>
+            </Link>) : ('')}
 
             {isLogin ? (
               <div className="relative group">
