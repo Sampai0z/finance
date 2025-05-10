@@ -10,9 +10,7 @@ import {
   Clock,
 } from "lucide-react";
 import { useCart } from "../components/CartContext";
-// import api from "../services/api";
 import api from "../../src/services/api";
-// Dados do carrinho
 
 export default function CheckoutPage() {
   const { cartItems } = useCart();
@@ -37,22 +35,20 @@ export default function CheckoutPage() {
       err.response?.data?.message || "Erro desconhecido";
     }
   };
-  
+
   useEffect(() => {
-      getUserData();
-    }, []);
+    getUserData();
+  }, []);
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: user?.nome,
+    name: "",
     phone: "",
     email: "",
     address: "",
-    number: "",
     complement: "",
     neighborhood: "",
     city: "",
-    state: "",
     zipCode: "",
     paymentMethod: "pix",
     cardNumber: "",
@@ -63,25 +59,23 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    if(user){
+    if (user) {
       setFormData((prev) => ({
         ...prev,
         name: user.nome,
         phone: user.telefone || "",
         email: user.email || "",
         address: user.endereco || "",
-        number: user.numero || "",
         complement: user.complemento || "",
         neighborhood: user.bairro || "",
         city: user.cidade || "",
-        state: user.estado || "",
+        // state: user.estado || "",
         zipCode: user.cep || "",
-      }))
+      }));
     }
-  }, [user])
+  }, [user]);
 
-  console.log(user)
-
+  console.log(user);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calcular valores
@@ -181,7 +175,7 @@ export default function CheckoutPage() {
                       type="text"
                       id="name"
                       name="name"
-                      value={formData.name}
+                      value={user?.nome ?? ""}
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparentdisabled:text-zinc-800 disabled:bg-zinc-200"
                       required
@@ -199,7 +193,7 @@ export default function CheckoutPage() {
                       type="tel"
                       id="phone"
                       name="phone"
-                      value={user?.telefone}
+                      value={user?.telefone ?? ""}
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
@@ -217,7 +211,7 @@ export default function CheckoutPage() {
                       type="email"
                       id="email"
                       name="email"
-                      value={user?.email}
+                      value={user?.email ?? ""}
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
@@ -244,27 +238,28 @@ export default function CheckoutPage() {
                       type="text"
                       id="address"
                       name="address"
-                      value={user?.endereco}
+                      value={user?.endereco ?? ""}
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
+
                   <div>
                     <label
-                      htmlFor="number"
+                      htmlFor="numero"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Número
+                      numero
                     </label>
                     <input
                       type="text"
-                      id="number"
-                      name="number"
-                      value={formData.number}
+                      id="numero"
+                      name="numero"
+                      value={user?.numero ?? ""}
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
-                      required
                       disabled
                     />
                   </div>
@@ -279,7 +274,7 @@ export default function CheckoutPage() {
                       type="text"
                       id="complement"
                       name="complement"
-                      value={formData.complement}
+                      value={user?.complemento ?? ""}
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       disabled
@@ -318,6 +313,7 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                   <div>
@@ -335,10 +331,11 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparentdisabled:text-zinc-800 disabled:bg-zinc-200"
                       required
+                      disabled
                     />
                   </div>
                   <div>
-                    <label
+                    {/* <label
                       htmlFor="state"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
@@ -360,9 +357,15 @@ export default function CheckoutPage() {
                       <option value="PR">Paraná</option>
                       <option value="SC">Santa Catarina</option>
                       <option value="RS">Rio Grande do Sul</option>
-                      {/* Adicione outros estados conforme necessário */}
-                    </select>
+                      {/* Adicione outros estados conforme necessário 
+                    </select> */}
                   </div>
+                </div>
+                <div className="mt-4 p-4 border rounded-md bg-gray-50">
+                  <p className="text-sm text-gray-700">
+                    Por favor, confirme o endereço de entrega. Caso esteja
+                    incorreto, corrija-o na área 'Meus Endereços'.
+                  </p>
                 </div>
               </div>
 

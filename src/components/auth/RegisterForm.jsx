@@ -13,6 +13,10 @@ export default function RegisterForm() {
     confirmPassword: "",
     cidade: "",
     endereco: "",
+    bairro: "",
+    numero: "",
+    complemento: "",
+    estado: "",
     cep: "",
     terms: false,
   });
@@ -93,7 +97,6 @@ export default function RegisterForm() {
           required
         />
       </div>
-
       <div>
         <label
           htmlFor="email"
@@ -112,7 +115,6 @@ export default function RegisterForm() {
           required
         />
       </div>
-
       <div>
         <label
           htmlFor="telefone"
@@ -131,7 +133,6 @@ export default function RegisterForm() {
           required
         />
       </div>
-
       <div>
         <label
           htmlFor="password"
@@ -163,7 +164,6 @@ export default function RegisterForm() {
           A senha deve ter pelo menos 6 caracteres
         </p>
       </div>
-
       <div>
         <label
           htmlFor="confirmPassword"
@@ -191,25 +191,27 @@ export default function RegisterForm() {
           </button>
         </div>
       </div>
-
       <div>
         <label
-          htmlFor="endereco"
+          htmlFor="estado"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Endereço
+          Estado
         </label>
-        <input
-          id="endereco"
-          name="endereco"
-          type="text"
-          value={formData.endereco}
+        <select
+          id="estado"
+          name="estado"
+          value={formData.estado}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-          placeholder="Rua, número, endereco"
+          className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           required
-        />
+        >
+          <option value="">Selecione</option>
+          <option value="BA">Bahia - Juazeiro</option>
+          <option value="PE">Pernambuco - Petrolina</option>
+        </select>
       </div>
+
       <div>
         <label
           htmlFor="cidade"
@@ -225,6 +227,78 @@ export default function RegisterForm() {
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           placeholder="Cidade"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="endereco"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Endereço
+        </label>
+        <input
+          id="endereco"
+          name="endereco"
+          type="text"
+          value={formData.endereco}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="Rua, Endereço"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="numero"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Número
+        </label>
+        <input
+          id="numero"
+          name="numero"
+          type="text"
+          value={formData.numero}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="Número"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="bairro"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Bairro
+        </label>
+        <input
+          id="bairro"
+          name="bairro"
+          type="text"
+          value={formData.bairro}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="Bairro"
+          required
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="complemento"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Complemento
+        </label>
+        <input
+          id="complemento"
+          name="complemento"
+          type="text"
+          value={formData.complemento}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          placeholder="complemento"
           required
         />
       </div>
@@ -246,7 +320,6 @@ export default function RegisterForm() {
           required
         />
       </div>
-
       <div className="flex items-center">
         <input
           id="terms"
@@ -268,7 +341,6 @@ export default function RegisterForm() {
           </a>
         </label>
       </div>
-
       <div>
         <button
           type="submit"

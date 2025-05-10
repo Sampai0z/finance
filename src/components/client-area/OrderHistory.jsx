@@ -9,44 +9,6 @@ import {
 } from "lucide-react";
 import api from "../../services/api";
 
-// const ordersData = [
-//   {
-//     id: "PED12345",
-//     date: "15/11/2023",
-//     status: "Entregue",
-//     total: 45.9,
-//     items: ["2x Coxinha", "3x Kibe", "1x Refrigerante"],
-//   },
-//   {
-//     id: "PED12344",
-//     date: "10/11/2023",
-//     status: "Entregue",
-//     total: 32.5,
-//     items: ["4x Esfiha", "2x Pastel", "1x Suco"],
-//   },
-//   {
-//     id: "PED12343",
-//     date: "05/11/2023",
-//     status: "Entregue",
-//     total: 28.0,
-//     items: ["2x Pastel", "2x Coxinha", "1x Refrigerante"],
-//   },
-//   {
-//     id: "PED12342",
-//     date: "01/11/2023",
-//     status: "Entregue",
-//     total: 37.5,
-//     items: ["1x Combo Festa", "1x Refrigerante"],
-//   },
-//   {
-//     id: "PED12341",
-//     date: "25/10/2023",
-//     status: "Entregue",
-//     total: 42.0,
-//     items: ["3x Esfiha", "2x Kibe", "2x Coxinha"],
-//   },
-// ];
-
 export default function OrderHistory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedOrder, setExpandedOrder] = useState(null);

@@ -1,50 +1,73 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, MapPin, Check } from "lucide-react";
-
-// Dados simulados de endereços
-const addressesData = [
-  {
-    id: 1,
-    title: "Casa",
-    street: "Rua das Flores",
-    number: "123",
-    complement: "Apto 101",
-    neighborhood: "Jardim Primavera",
-    city: "São Paulo",
-    state: "SP",
-    zipCode: "01234-567",
-    isDefault: true,
-  },
-  {
-    id: 2,
-    title: "Trabalho",
-    street: "Avenida Paulista",
-    number: "1000",
-    complement: "Sala 45",
-    neighborhood: "Bela Vista",
-    city: "São Paulo",
-    state: "SP",
-    zipCode: "01310-100",
-    isDefault: false,
-  },
-];
+import api from "../../services/api";
 
 export default function Addresses() {
-  const [addresses, setAddresses] = useState(addressesData);
+  const [profile, setProfile] = useState(null);
+  const [addresses, setAddresses] = useState([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
 
   const [newAddress, setNewAddress] = useState({
-    title: "",
-    street: "",
-    number: "",
-    complement: "",
-    neighborhood: "",
-    city: "",
-    state: "",
+    // title: "",
+    endereco: "",
+    numero: "",
+    complemento: "",
+    bairro: "",
+    cidade: "",
+    estado: "",
     zipCode: "",
     isDefault: false,
   });
+
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Usuário não autenticado");
+
+      const response = await api.get("/api/usuario", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const user = response.data;
+      setProfile(user);
+
+      // Atualiza addresses com dados vindos do backend
+      const userAddress = {
+        id: user.id,
+        title: "Casa",
+        endereco: user.endereco,
+        numero: user.numero,
+        complemento: user.complemento,
+        bairro: user.bairro,
+        cidade: user.cidade,
+        estado: user.estado,
+        zipCode: user.cep,
+        isDefault: true,
+      };
+
+      setAddresses([userAddress]);
+    } catch (err) {
+      console.error(err.response?.data?.message || "Erro desconhecido");
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const address = {
+    id: profile?.id,
+    title: "Casa", // Valor fixo ou pode vir do DB
+    endereco: profile?.endereco,
+    numero: profile?.numero, // Se não tiver no DB, deixa vazio ou crie lógica para extrair
+    complemento: profile?.complemento,
+    bairro: profile?.bairro,
+    cidade: profile?.cidade,
+    zipCode: profile?.cep,
+    isDefault: true, // Define como quiser
+  };
+  console.log(address);
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -81,13 +104,13 @@ export default function Addresses() {
 
     // Resetar o formulário
     setNewAddress({
-      title: "",
-      street: "",
-      number: "",
-      complement: "",
-      neighborhood: "",
-      city: "",
-      state: "",
+      // title: "",
+      endereco: "",
+      numero: "",
+      complemento: "",
+      bairro: "",
+      cidade: "",
+      estado: "",
       zipCode: "",
       isDefault: false,
     });
@@ -100,41 +123,66 @@ export default function Addresses() {
     setEditingAddressId(address.id);
     setIsAddingNew(true);
   };
-
-  const handleUpdateAddress = (e) => {
+  const handleUpdateAddress = async (e) => {
     e.preventDefault();
 
-    // Em uma aplicação real, você enviaria isso para o backend
-
-    // Se o endereço editado for definido como padrão, remova o padrão dos outros
+    // Atualiza o estado localmente antes de enviar para o backend
     let updatedAddresses = addresses.map((address) =>
       newAddress.isDefault ? { ...address, isDefault: false } : address
     );
 
-    // Atualizar o endereço específico
     updatedAddresses = updatedAddresses.map((address) =>
       address.id === editingAddressId
         ? { ...newAddress, id: address.id }
         : address
     );
+    const token = localStorage.getItem("token");
+    // Agora, enviamos a requisição PUT para o backend
+    try {
+      const response = await api.put(
+        "/api/cliente/endereco",
+        {
+          endereco: newAddress.endereco,
+          numero: newAddress.numero,
+          complemento: newAddress.complemento,
+          bairro: newAddress.bairro,
+          cidade: newAddress.cidade,
+          estado: newAddress.estado,
+          zipCode: newAddress.zipCode,
+          isDefault: newAddress.isDefault,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Adicione o token de autenticação aqui
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    setAddresses(updatedAddresses);
-
-    // Resetar o formulário
-    setNewAddress({
-      title: "",
-      street: "",
-      number: "",
-      complement: "",
-      neighborhood: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      isDefault: false,
-    });
-
-    setIsAddingNew(false);
-    setEditingAddressId(null);
+      if (response.status === 200) {
+        // Sucesso na atualização
+        setAddresses(updatedAddresses);
+        // Resetar o formulário
+        setNewAddress({
+          // title: "",
+          endereco: "",
+          numero: "",
+          complemento: "",
+          bairro: "",
+          cidade: "",
+          estado: "",
+          zipCode: "",
+          isDefault: false,
+        });
+        setIsAddingNew(false);
+        setEditingAddressId(null);
+        console.log("Endereço atualizado com sucesso!");
+      } else {
+        console.log("Falha ao atualizar o endereço");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar o endereço:", error);
+    }
   };
 
   const handleDeleteAddress = (id) => {
@@ -167,13 +215,13 @@ export default function Addresses() {
             setIsAddingNew(!isAddingNew);
             setEditingAddressId(null);
             setNewAddress({
-              title: "",
-              street: "",
-              number: "",
-              complement: "",
-              neighborhood: "",
-              city: "",
-              state: "",
+              // title: "",
+              endereco: "",
+              numero: "",
+              complemento: "",
+              bairro: "",
+              cidade: "",
+              estado: "",
               zipCode: "",
               isDefault: false,
             });
@@ -221,6 +269,7 @@ export default function Addresses() {
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   required
+                  disabled
                 />
               </div>
 
@@ -245,16 +294,16 @@ export default function Addresses() {
 
               <div className="md:col-span-2">
                 <label
-                  htmlFor="street"
+                  htmlFor="endereco"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
                   Rua/Avenida
                 </label>
                 <input
                   type="text"
-                  id="street"
-                  name="street"
-                  value={newAddress.street}
+                  id="endereco"
+                  name="endereco"
+                  value={newAddress.endereco}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   required
@@ -263,16 +312,16 @@ export default function Addresses() {
 
               <div>
                 <label
-                  htmlFor="number"
+                  htmlFor="numero"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
                   Número
                 </label>
                 <input
                   type="text"
-                  id="number"
-                  name="number"
-                  value={newAddress.number}
+                  id="numero"
+                  name="numero"
+                  value={newAddress.numero}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   required
@@ -281,17 +330,17 @@ export default function Addresses() {
 
               <div>
                 <label
-                  htmlFor="complement"
+                  htmlFor="complemento"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
                   Complemento
                 </label>
                 <input
                   type="text"
-                  id="complement"
-                  name="complement"
+                  id="complemento"
+                  name="complemento"
                   placeholder="Apto, Bloco, etc."
-                  value={newAddress.complement}
+                  value={newAddress.complemento}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
@@ -299,16 +348,16 @@ export default function Addresses() {
 
               <div>
                 <label
-                  htmlFor="neighborhood"
+                  htmlFor="bairro"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
                   Bairro
                 </label>
                 <input
                   type="text"
-                  id="neighborhood"
-                  name="neighborhood"
-                  value={newAddress.neighborhood}
+                  id="bairro"
+                  name="bairro"
+                  value={newAddress.bairro}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   required
@@ -317,16 +366,16 @@ export default function Addresses() {
 
               <div>
                 <label
-                  htmlFor="city"
+                  htmlFor="cidade"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
                   Cidade
                 </label>
                 <input
                   type="text"
-                  id="city"
-                  name="city"
-                  value={newAddress.city}
+                  id="cidade"
+                  name="cidade"
+                  value={newAddress.cidade}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   required
@@ -335,24 +384,22 @@ export default function Addresses() {
 
               <div>
                 <label
-                  htmlFor="state"
+                  htmlFor="estado"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
                   Estado
                 </label>
                 <select
-                  id="state"
-                  name="state"
-                  value={newAddress.state}
+                  id="estado"
+                  name="estado"
+                  value={newAddress.estado}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   required
                 >
                   <option value="">Selecione</option>
-                  <option value="SP">São Paulo</option>
-                  <option value="RJ">Rio de Janeiro</option>
-                  <option value="MG">Minas Gerais</option>
-                  {/* Adicione outros estados conforme necessário */}
+                  <option value="BA">Bahia - Juazeiro</option>
+                  <option value="PE">Pernambuco - Petrolina</option>
                 </select>
               </div>
 
@@ -423,11 +470,11 @@ export default function Addresses() {
 
                   <div className="mt-2 text-gray-700">
                     <p>
-                      {address.street}, {address.number}
-                      {address.complement ? `, ${address.complement}` : ""}
+                      {address.endereco}, {address.numero}
+                      {address.complemento ? `, ${address.complemento}` : ""}
                     </p>
                     <p>
-                      {address.neighborhood}, {address.city} - {address.state}
+                      {address.bairro}, {address.cidade} - {address.estado}
                     </p>
                     <p>CEP: {address.zipCode}</p>
                   </div>

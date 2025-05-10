@@ -1,19 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Save } from "lucide-react";
+import api from "../../services/api";
 
 export default function Profile() {
-  const [profile, setProfile] = useState({
-    name: "João da Silva",
-    email: "joao.silva@email.com",
-    phone: "(11) 98765-4321",
-    birthdate: "1990-05-15",
-    cpf: "123.456.789-00",
-    notifications: {
-      email: true,
-      sms: false,
-      promotions: true,
-    },
-  });
+  // const [profile, setProfile] = useState({
+  //   name: "João da Silva",
+  //   email: "joao.silva@email.com",
+  //   phone: "(11) 98765-4321",
+  //   birthdate: "1990-05-15",
+  //   cpf: "123.456.789-00",
+  //   notifications: {
+  //     email: true,
+  //     sms: false,
+  //     promotions: true,
+  //   },
+  // });
+  const [profile, setProfile] = useState(null);
+
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      const response = await api.get("/api/usuario", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = response.data;
+      setProfile(user);
+    } catch (err) {
+      err.response?.data?.message || "Erro desconhecido";
+    }
+  };
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -79,7 +104,7 @@ export default function Profile() {
                 type="text"
                 id="name"
                 name="name"
-                value={profile.name}
+                value={profile?.nome ?? ""}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
@@ -97,7 +122,7 @@ export default function Profile() {
                 type="email"
                 id="email"
                 name="email"
-                value={profile.email}
+                value={profile?.email ?? ""}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
@@ -115,14 +140,14 @@ export default function Profile() {
                 type="tel"
                 id="phone"
                 name="phone"
-                value={profile.phone}
+                value={profile?.telefone ?? ""}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
               />
             </div>
 
-            <div>
+            {/* <div>
               <label
                 htmlFor="birthdate"
                 className="block text-sm font-medium text-gray-700 mb-1"
@@ -133,12 +158,12 @@ export default function Profile() {
                 type="date"
                 id="birthdate"
                 name="birthdate"
-                value={profile.birthdate}
+                value={profile?.birthdate ?? ""}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
               />
-            </div>
+            </div> */}
 
             <div>
               <label
@@ -151,14 +176,14 @@ export default function Profile() {
                 type="text"
                 id="cpf"
                 name="cpf"
-                value={profile.cpf}
+                value={profile?.cpf ?? ""}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
               />
             </div>
           </div>
-
+          {/* 
           <div className="mt-8">
             <h3 className="text-md font-medium text-amber-800 mb-4">
               Preferências de Notificação
@@ -170,7 +195,7 @@ export default function Profile() {
                   type="checkbox"
                   id="notifications.email"
                   name="notifications.email"
-                  checked={profile.notifications.email}
+                  checked={profile?.notifications.email}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
@@ -188,7 +213,7 @@ export default function Profile() {
                   type="checkbox"
                   id="notifications.sms"
                   name="notifications.sms"
-                  checked={profile.notifications.sms}
+                  checked={profile?.notifications.sms}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
@@ -206,7 +231,7 @@ export default function Profile() {
                   type="checkbox"
                   id="notifications.promotions"
                   name="notifications.promotions"
-                  checked={profile.notifications.promotions}
+                  checked={profile?.notifications.promotions}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
@@ -219,7 +244,7 @@ export default function Profile() {
                 </label>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {isEditing && (
             <div className="mt-8 flex justify-end">
@@ -236,7 +261,9 @@ export default function Profile() {
       </div>
 
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="w-full text-lg font-semibold text-amber-800 mb-6 ">Segurança</h2>
+        <h2 className="w-full text-lg font-semibold text-amber-800 mb-6 ">
+          Segurança
+        </h2>
 
         <div className="space-y-4 space-x-20">
           <button className="py-0.5 px-2 rounded-md text-amber-600 hover:text-amber-800 hover:bg-amber-300 font-medium">
