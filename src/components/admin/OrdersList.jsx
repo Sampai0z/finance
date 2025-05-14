@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -13,93 +13,45 @@ import {
   Download,
   Printer,
 } from "lucide-react";
+import api from "../../services/api";
 
 // Dados simulados de pedidos
-const pedidosData = [
-  {
-    id: "PED12350",
-    cliente: "Maria Silva",
-    telefone: "(11) 98765-4321",
-    data: "15/11/2023 14:35",
-    valor: 45.5,
-    status: "Pendente",
-    itens: ["2x Coxinha", "1x Pastel", "1x Refrigerante"],
-    endereco: "Rua das Flores, 123 - Jardim Primavera",
-  },
-  {
-    id: "PED12349",
-    cliente: "João Oliveira",
-    telefone: "(11) 97654-3210",
-    data: "15/11/2023 13:22",
-    valor: 68.0,
-    status: "Em preparo",
-    itens: ["3x Kibe", "2x Esfiha", "1x Suco"],
-    endereco: "Av. Principal, 456 - Centro",
-  },
-  {
-    id: "PED12348",
-    cliente: "Ana Santos",
-    telefone: "(11) 96543-2109",
-    data: "15/11/2023 11:47",
-    valor: 32.5,
-    status: "Pronto para entrega",
-    itens: ["4x Coxinha", "1x Refrigerante"],
-    endereco: "Rua Secundária, 789 - Vila Nova",
-  },
-  {
-    id: "PED12347",
-    cliente: "Carlos Mendes",
-    telefone: "(11) 95432-1098",
-    data: "15/11/2023 10:15",
-    valor: 54.0,
-    status: "Em entrega",
-    itens: ["1x Combo Festa", "2x Refrigerante"],
-    endereco: "Alameda dos Anjos, 321 - Jardim Celeste",
-  },
-  {
-    id: "PED12346",
-    cliente: "Fernanda Lima",
-    telefone: "(11) 94321-0987",
-    data: "14/11/2023 18:40",
-    valor: 42.0,
-    status: "Entregue",
-    itens: ["3x Pastel", "2x Kibe", "1x Suco"],
-    endereco: "Rua das Margaridas, 654 - Jardim Florido",
-  },
-  {
-    id: "PED12345",
-    cliente: "Roberto Alves",
-    telefone: "(11) 93210-9876",
-    data: "14/11/2023 16:15",
-    valor: 37.5,
-    status: "Entregue",
-    itens: ["5x Esfiha", "1x Refrigerante"],
-    endereco: "Av. dos Estados, 987 - Parque Industrial",
-  },
-  {
-    id: "PED12344",
-    cliente: "Juliana Costa",
-    telefone: "(11) 92109-8765",
-    data: "14/11/2023 14:30",
-    valor: 29.0,
-    status: "Entregue",
-    itens: ["2x Coxinha", "2x Pastel", "1x Suco"],
-    endereco: "Rua dos Lírios, 159 - Jardim das Flores",
-  },
-  {
-    id: "PED12343",
-    cliente: "Marcelo Souza",
-    telefone: "(11) 91098-7654",
-    data: "14/11/2023 12:10",
-    valor: 51.5,
-    status: "Entregue",
-    itens: ["1x Combo Família", "2x Refrigerante"],
-    endereco: "Av. Paulista, 1000 - Bela Vista",
-  },
-];
 
 export default function OrdersList() {
-  const [pedidos, setPedidos] = useState(pedidosData);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Usuário não autenticado");
+        }
+        const response = await api.get(
+          "http://localhost:3000/api/lista_pedidos",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // tem que ser assim
+            },
+          }
+        );
+
+        const formattedOrders = response.data.data.map((order) => {
+          // Converte 'preco_total' para número antes de aplicar 'toFixed'
+          const totalPrice = parseFloat(order.preco_total);
+          return {
+            ...order,
+            preco_total: isNaN(totalPrice) ? "N/A" : totalPrice.toFixed(2), // Verifica se é um número válido
+          };
+        });
+        setOrders(formattedOrders);
+      } catch (err) {
+        console.error(err.response?.data?.message || err.message);
+      }
+    };
+    fetchOrders();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("todos");
   const [sortBy, setSortBy] = useState("data");
@@ -113,14 +65,14 @@ export default function OrdersList() {
       setSortOrder("asc");
     }
   };
-
-  const filteredPedidos = pedidos
+  console.log(orders);
+  const filteredPedidos = orders
     .filter((pedido) => {
       const matchesSearch =
-        pedido.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pedido.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pedido.itens.some((item) =>
-          item.toLowerCase().includes(searchTerm.toLowerCase())
+        pedido.cod_pedido.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pedido.itens_pedido.some((item) =>
+          item.produto.nome.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
       const matchesFilter =
@@ -132,15 +84,13 @@ export default function OrdersList() {
     .sort((a, b) => {
       let comparison = 0;
       if (sortBy === "data") {
-        comparison =
-          new Date(a.data.split(" ")[0].split("/").reverse().join("-")) -
-          new Date(b.data.split(" ")[0].split("/").reverse().join("-"));
+        comparison = new Date(a.data_pedido) - new Date(b.data_pedido);
       } else if (sortBy === "valor") {
-        comparison = a.valor - b.valor;
+        comparison = parseFloat(a.preco_total) - parseFloat(b.preco_total);
       } else if (sortBy === "cliente") {
-        comparison = a.cliente.localeCompare(b.cliente);
+        comparison = a.cliente.nome.localeCompare(b.cliente.nome);
       } else if (sortBy === "id") {
-        comparison = a.id.localeCompare(b.id);
+        comparison = a.cod_pedido.localeCompare(b.cod_pedido);
       }
 
       return sortOrder === "asc" ? comparison : -comparison;
@@ -166,8 +116,8 @@ export default function OrdersList() {
   };
 
   const handleStatusChange = (id, newStatus) => {
-    setPedidos(
-      pedidos.map((pedido) =>
+    setOrders(
+      orders.map((pedido) =>
         pedido.id === id ? { ...pedido, status: newStatus } : pedido
       )
     );
@@ -312,23 +262,31 @@ export default function OrdersList() {
                   <tr key={pedido.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-amber-600">
-                        {pedido.id}
+                        {pedido.cod_pedido}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {pedido.cliente}
+                        {pedido.cliente.nome}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {pedido.telefone}
+                        {pedido.cliente.telefone}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{pedido.data}</div>
+                      <div className="text-sm text-gray-900">
+                        {new Date(pedido.data_pedido).toLocaleString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        R$ {pedido.valor.toFixed(2)}
+                        R$ {pedido.preco_total}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -387,7 +345,7 @@ export default function OrdersList() {
           <div className="text-sm text-gray-700">
             Mostrando{" "}
             <span className="font-medium">{filteredPedidos.length}</span> de{" "}
-            <span className="font-medium">{pedidos.length}</span> pedidos
+            <span className="font-medium">{orders.length}</span> pedidos
           </div>
           <div className="flex space-x-2">
             <button className="px-3 py-1 border rounded-md text-gray-700 hover:bg-gray-100 disabled:opacity-50">
