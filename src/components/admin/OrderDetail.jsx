@@ -16,86 +16,119 @@ import {
   XCircle,
   ArrowRight,
 } from "lucide-react";
-
+import api from "../../services/api";
 // Dados simulados de pedidos
-const pedidosData = [
-  {
-    id: "PED12350",
-    cliente: "Maria Silva",
-    telefone: "(11) 98765-4321",
-    email: "maria.silva@email.com",
-    data: "15/11/2023 14:35",
-    valor: 45.5,
-    status: "Pendente",
-    formaPagamento: "Cartão de Crédito",
-    itens: [
-      {
-        nome: "Coxinha de Frango",
-        quantidade: 2,
-        valorUnitario: 5.5,
-        valorTotal: 11.0,
-      },
-      {
-        nome: "Pastel de Carne",
-        quantidade: 1,
-        valorUnitario: 6.0,
-        valorTotal: 6.0,
-      },
-      {
-        nome: "Refrigerante Lata",
-        quantidade: 1,
-        valorUnitario: 5.0,
-        valorTotal: 5.0,
-      },
-    ],
-    endereco: {
-      rua: "Rua das Flores",
-      numero: "123",
-      complemento: "Apto 101",
-      bairro: "Jardim Primavera",
-      cidade: "São Paulo",
-      estado: "SP",
-      cep: "01234-567",
-    },
-    taxaEntrega: 8.0,
-    subtotal: 22.0,
-    desconto: 0,
-    total: 30.0,
-    observacoes: "Entregar na portaria. Sem cebola no pastel, por favor.",
-    historico: [
-      {
-        data: "15/11/2023 14:35",
-        status: "Pedido recebido",
-        descricao: "Pedido registrado no sistema",
-      },
-      {
-        data: "15/11/2023 14:40",
-        status: "Pagamento confirmado",
-        descricao: "Pagamento aprovado via Cartão de Crédito",
-      },
-    ],
-  },
-  // Outros pedidos...
-];
+// const pedidosData = [
+//   {
+//     id: "PED12350",
+//     cliente: "Maria Silva",
+//     telefone: "(11) 98765-4321",
+//     email: "maria.silva@email.com",
+//     data: "15/11/2023 14:35",
+//     valor: 45.5,
+//     status: "Pendente",
+//     formaPagamento: "Cartão de Crédito",
+//     itens: [
+//       {
+//         nome: "Coxinha de Frango",
+//         quantidade: 2,
+//         valorUnitario: 5.5,
+//         valorTotal: 11.0,
+//       },
+//       {
+//         nome: "Pastel de Carne",
+//         quantidade: 1,
+//         valorUnitario: 6.0,
+//         valorTotal: 6.0,
+//       },
+//       {
+//         nome: "Refrigerante Lata",
+//         quantidade: 1,
+//         valorUnitario: 5.0,
+//         valorTotal: 5.0,
+//       },
+//     ],
+//     endereco: {
+//       rua: "Rua das Flores",
+//       numero: "123",
+//       complemento: "Apto 101",
+//       bairro: "Jardim Primavera",
+//       cidade: "São Paulo",
+//       estado: "SP",
+//       cep: "01234-567",
+//     },
+//     taxaEntrega: 8.0,
+//     subtotal: 22.0,
+//     desconto: 0,
+//     total: 30.0,
+//     observacoes: "Entregar na portaria. Sem cebola no pastel, por favor.",
+//     historico: [
+//       {
+//         data: "15/11/2023 14:35",
+//         status: "Pedido recebido",
+//         descricao: "Pedido registrado no sistema",
+//       },
+//       {
+//         data: "15/11/2023 14:40",
+//         status: "Pagamento confirmado",
+//         descricao: "Pagamento aprovado via Cartão de Crédito",
+//       },
+//     ],
+//   },
+//   // Outros pedidos...
+// ];
 
 export default function OrderDetail() {
-  const { id } = useParams();
-  const [pedido, setPedido] = useState(null);
+  const [pedido, setPedido] = useState([]);
   const [loading, setLoading] = useState(true);
   const [novoStatus, setNovoStatus] = useState("");
+  const { id } = useParams();
 
   useEffect(() => {
-    // Em uma aplicação real, você buscaria os dados do pedido de uma API
-    const pedidoEncontrado = pedidosData.find((p) => p.id === id);
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Usuário não autenticado");
+        }
+        const response = await api.get(
+          "http://localhost:3000/api/lista_pedidos",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-    if (pedidoEncontrado) {
-      setPedido(pedidoEncontrado);
-      setNovoStatus(pedidoEncontrado.status);
+        const formattedOrders = response.data.data.map((order) => {
+          const totalPrice = parseFloat(order.preco_total);
+          return {
+            ...order,
+            preco_total: isNaN(totalPrice) ? "N/A" : totalPrice.toFixed(2),
+          };
+        });
+        setPedido(formattedOrders);
+        setLoading(false);
+      } catch (err) {
+        console.error(err.response?.data?.message || err.message);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  useEffect(() => {
+    if (pedido.length > 0) {
+      const pedidoEncontrado = pedido.find((p) => p.id === id);
+      if (pedidoEncontrado) {
+        setNovoStatus(pedidoEncontrado.status);
+      }
+      setLoading(false);
     }
+  }, [id, pedido]);
 
-    setLoading(false);
-  }, [id]);
-
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
   const handleStatusChange = () => {
     if (novoStatus !== pedido.status) {
       // Em uma aplicação real, você enviaria esta atualização para uma API
@@ -114,24 +147,24 @@ export default function OrderDetail() {
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case "pendente":
-        return "bg-yellow-100 text-yellow-800";
-      case "em preparo":
-        return "bg-blue-100 text-blue-800";
-      case "pronto para entrega":
-        return "bg-purple-100 text-purple-800";
-      case "em entrega":
-        return "bg-indigo-100 text-indigo-800";
-      case "entregue":
-        return "bg-green-100 text-green-800";
-      case "cancelado":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  // const getStatusColor = (status) => {
+  //   switch (status.toLowerCase()) {
+  //     case "pendente":
+  //       return "bg-yellow-100 text-yellow-800";
+  //     case "em preparo":
+  //       return "bg-blue-100 text-blue-800";
+  //     case "pronto para entrega":
+  //       return "bg-purple-100 text-purple-800";
+  //     case "em entrega":
+  //       return "bg-indigo-100 text-indigo-800";
+  //     case "entregue":
+  //       return "bg-green-100 text-green-800";
+  //     case "cancelado":
+  //       return "bg-red-100 text-red-800";
+  //     default:
+  //       return "bg-gray-100 text-gray-800";
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -175,13 +208,13 @@ export default function OrderDetail() {
           <div>
             <h1 className="text-2xl font-bold text-gray-800">
               Pedido {pedido.id}
-              <span
+              {/* <span
                 className={`ml-3 text-sm px-3 py-1 rounded-full ${getStatusColor(
                   pedido.status
                 )}`}
-              >
-                {pedido.status}
-              </span>
+              > */}
+              {pedido.status}
+              {/* </span> */}
             </h1>
             <p className="text-gray-600">Realizado em {pedido.data}</p>
           </div>
@@ -266,10 +299,12 @@ export default function OrderDetail() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {pedido.itens.map((item, index) => (
+                  {pedido?.itens_pedido?.map((item, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{item.nome}</div>
+                        <div className="text-sm text-gray-900">
+                          {item.produto?.nome}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
@@ -278,12 +313,15 @@ export default function OrderDetail() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          R$ {item.valorUnitario.toFixed(2)}
+                          R$ {item.preco_unitario}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          R$ {item.valorTotal.toFixed(2)}
+                          {/* R${" "}
+                          {(
+                            item.quantidade * parseFloat(item.preco_unitario)
+                          ).toFixed(2)} */}
                         </div>
                       </td>
                     </tr>
@@ -298,7 +336,7 @@ export default function OrderDetail() {
                       Subtotal
                     </td>
                     <td className="px-6 py-3 text-sm text-gray-900">
-                      R$ {pedido.subtotal.toFixed(2)}
+                      {/* R$ {pedido.subtotal.toFixed(2)} */}
                     </td>
                   </tr>
                   <tr>
@@ -308,9 +346,7 @@ export default function OrderDetail() {
                     >
                       Taxa de Entrega
                     </td>
-                    <td className="px-6 py-3 text-sm text-gray-900">
-                      R$ {pedido.taxaEntrega.toFixed(2)}
-                    </td>
+                    <td className="px-6 py-3 text-sm text-gray-900">R$ 5,00</td>
                   </tr>
                   {pedido.desconto > 0 && (
                     <tr>
@@ -321,7 +357,7 @@ export default function OrderDetail() {
                         Desconto
                       </td>
                       <td className="px-6 py-3 text-sm text-green-600">
-                        - R$ {pedido.desconto.toFixed(2)}
+                        {/* - R$ {pedido.desconto.toFixed(2)} */}
                       </td>
                     </tr>
                   )}
@@ -333,7 +369,7 @@ export default function OrderDetail() {
                       Total
                     </td>
                     <td className="px-6 py-3 text-sm font-bold text-gray-900">
-                      R$ {pedido.total.toFixed(2)}
+                      R$ {pedido.preco_total}
                     </td>
                   </tr>
                 </tfoot>
@@ -347,7 +383,7 @@ export default function OrderDetail() {
               Histórico do Pedido
             </h2>
             <div className="space-y-4">
-              {pedido.historico.map((evento, index) => (
+              {/* {pedido.historico.map((evento, index) => (
                 <div key={index} className="flex">
                   <div className="mr-4 flex flex-col items-center">
                     <div className="h-4 w-4 rounded-full bg-amber-600"></div>
@@ -367,7 +403,7 @@ export default function OrderDetail() {
                     <p className="text-sm text-gray-600">{evento.descricao}</p>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
 
@@ -415,16 +451,16 @@ export default function OrderDetail() {
               <MapPin className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
               <div>
                 <p className="text-sm text-gray-900">
-                  {pedido.endereco.rua}, {pedido.endereco.numero}
-                  {pedido.endereco.complemento &&
-                    ` - ${pedido.endereco.complemento}`}
+                  {pedido.cliente?.endereco}, {pedido.cliente?.numero}
+                  {pedido.cliente?.complemento &&
+                    ` - ${pedido.cliente?.complemento}`}
                 </p>
                 <p className="text-sm text-gray-900">
-                  {pedido.endereco.bairro}, {pedido.endereco.cidade} -{" "}
-                  {pedido.endereco.estado}
+                  {pedido.cliente?.bairro}, {pedido.cliente?.cidade} -{" "}
+                  {pedido.cliente?.estado}
                 </p>
                 <p className="text-sm text-gray-900">
-                  CEP: {pedido.endereco.cep}
+                  CEP: {pedido.cliente?.cep}
                 </p>
               </div>
             </div>
