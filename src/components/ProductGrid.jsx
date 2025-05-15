@@ -28,7 +28,7 @@ export default function ProductGrid({onAddToCart}) {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="md:3/5 w-[70dvw] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {salgados.map((product) => (
           <ProductCard
             key={product.id}
@@ -40,7 +40,7 @@ export default function ProductGrid({onAddToCart}) {
       <h2 className="text-3xl font-bold text-center m-5  p-5 text-amber-800">
         Bebidas
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="md:w-3/5 w-[70dvw] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {bebidas.map((product) => (
           <ProductCard
             key={product.id}

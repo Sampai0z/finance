@@ -206,8 +206,8 @@ export default function Addresses() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-amber-800">Meus Endereços</h1>
-          <p className="text-amber-600">Gerencie seus endereços de entrega.</p>
+          <h1 className="md:text-2xl text-xl font-bold text-amber-800">Meus Endereços</h1>
+          <p className="md:text-base text-sm text-amber-600">Gerencie seus endereços de entrega.</p>
         </div>
 
         <button
@@ -226,7 +226,7 @@ export default function Addresses() {
               isDefault: false,
             });
           }}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium ${
+          className={`flex items-center mx-8 md:space-x-2 md:px-4 md:py-2 space-x-1 px-2 py-1 rounded-lg text-sm font-medium ${
             isAddingNew
               ? "bg-gray-200 text-gray-700"
               : "bg-amber-600 text-white hover:bg-amber-700"
@@ -236,8 +236,8 @@ export default function Addresses() {
             <span>Cancelar</span>
           ) : (
             <>
-              <Plus className="h-4 w-4" />
-              <span>Adicionar Endereço</span>
+              <Plus className="md:h-4 md:w-4 h-6 w-6" />
+              <span className="md:block hidden">Adicionar Endereço</span>
             </>
           )}
         </button>
@@ -454,9 +454,9 @@ export default function Addresses() {
           </div>
         ) : (
           addresses.map((address) => (
-            <div key={address.id} className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex justify-between items-start">
-                <div>
+            <div key={address.id} className="bg-white rounded-lg shadow-sm md:p-6 p-2">
+              <div className="flex justify-between items-start relative">
+                <div className="w-full">
                   <div className="flex items-center space-x-2">
                     <h3 className="text-lg font-medium text-amber-800">
                       {address.title}
@@ -468,19 +468,19 @@ export default function Addresses() {
                     )}
                   </div>
 
-                  <div className="mt-2 text-gray-700">
+                  <div className="w-full mt-2 text-gray-700">
                     <p>
                       {address.endereco}, {address.numero}
-                      {address.complemento ? `, ${address.complemento}` : ""}
-                    </p>
-                    <p>
-                      {address.bairro}, {address.cidade} - {address.estado}
+                      {address.complemento ? `, ${address.complemento}` : ""} 
+                      {address.bairro ? `, ${address.bairro}` : ""} 
+                      {address.cidade}
+                      {address.estado ? `- ${address.estado}` : ""}
                     </p>
                     <p>CEP: {address.zipCode}</p>
                   </div>
                 </div>
 
-                <div className="flex space-x-2">
+                <div className="absolute top-2 right-4 flex space-x-2">
                   <button
                     onClick={() => handleEditAddress(address)}
                     className="p-2 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-full"

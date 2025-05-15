@@ -165,15 +165,15 @@ export default function HomePage() {
                 </h2>
                 <Cart cartItems={cartItems} setCartItems={setCartItems} />
               </div>
-              <div className="md:w-1/2 bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-4 text-amber-800">
+              <div className="md:w-1/2 w-full bg-white p-6 rounded-lg shadow-md">
+                <h3 className="md:text-xl text-lg font-semibold mb-4 text-amber-800">
                   Informações de Entrega
                 </h3>
                 <form className="space-y-4">
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-sm font-medium mb-1"
+                      className="block text-md font-medium mb-1"
                     >
                       Nome Completo
                     </label>
@@ -188,7 +188,7 @@ export default function HomePage() {
                   <div>
                     <label
                       htmlFor="phone"
-                      className="block text-sm font-medium mb-1"
+                      className="block text-md font-medium mb-1"
                     >
                       Telefone
                     </label>
@@ -203,7 +203,7 @@ export default function HomePage() {
                   <div>
                     <label
                       htmlFor="address"
-                      className="block text-sm font-medium mb-1"
+                      className="block text-md font-medium mb-1"
                     >
                       Endereço
                     </label>
@@ -218,7 +218,7 @@ export default function HomePage() {
                   <div>
                     <label
                       htmlFor="complement"
-                      className="block text-sm font-medium mb-1"
+                      className="block text-md font-medium mb-1"
                     >
                       Complemento
                     </label>
@@ -232,7 +232,7 @@ export default function HomePage() {
                   <div>
                     <label
                       htmlFor="payment"
-                      className="block text-sm font-medium mb-1"
+                      className="block text-md font-medium mb-1"
                     >
                       Forma de Pagamento
                     </label>

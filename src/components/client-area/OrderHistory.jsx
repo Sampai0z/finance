@@ -77,7 +77,7 @@ export default function OrderHistory() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-amber-800">Meus Pedidos</h1>
+        <h1 className="md:text-2xl text-xl font-bold text-amber-800">Meus Pedidos</h1>
         <p className="text-amber-600">Histórico e detalhes dos seus pedidos.</p>
       </div>
 

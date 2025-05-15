@@ -21,7 +21,7 @@ export default function ProductCard({ product, onAddToCart }) {
           </span>
           <button
             onClick={onAddToCart}
-            className="bg-amber-600 text-white px-3 py-1 rounded hover:bg-amber-700"
+            className="bg-amber-600 text-white px-3 py-1 text-base md:text-md rounded hover:bg-amber-700"
           >
             Adicionar
           </button>

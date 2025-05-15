@@ -70,8 +70,8 @@ export default function Profile() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-amber-800">Meu Perfil</h1>
-        <p className="text-amber-600">Gerencie suas informações pessoais.</p>
+        <h1 className="md:text-2xl text-xl font-bold text-amber-800">Meu Perfil</h1>
+        <p className="md:text-base text-amber-600">Gerencie suas informações pessoais.</p>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm p-6">
@@ -265,7 +265,7 @@ export default function Profile() {
           Segurança
         </h2>
 
-        <div className="space-y-4 space-x-20">
+        <div className="fle fle-row flex-wrap justify-start items-start gap-4">
           <button className="py-0.5 px-2 rounded-md text-amber-600 hover:text-amber-800 hover:bg-amber-300 font-medium">
             Alterar Senha
           </button>

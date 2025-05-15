@@ -15,6 +15,28 @@ export default function Dashboard() {
   const [orders, setOrders] = useState([]);
   const [, setError] = useState(null);
     
+  const [user, setUser] = useState(null);
+
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Usuário não autenticado");
+      }
+
+      const response = await api.get("/api/usuario", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = response.data;
+      setUser(user);
+    } catch (err) {
+      err.response?.data?.message || "Erro desconhecido";
+    }
+  };
+
   useEffect(() => {
     const fetchOrders = async () => {
       const token = localStorage.getItem("token");
@@ -50,12 +72,14 @@ export default function Dashboard() {
     fetchOrders();
   }, []);
   
-
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-amber-800">Olá, João!</h1>
+        <h1 className="md:text-2xl text-xl font-bold text-amber-800">Olá, {user?.nome || ""} </h1>
         <p className="text-amber-600">Bem-vindo à sua área de cliente.</p>
       </div>
 
