@@ -77,7 +77,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col">
       <div>
         <h1 className="md:text-2xl text-xl font-bold text-amber-800">Olá, {user?.nome || ""} </h1>
         <p className="text-amber-600">Bem-vindo à sua área de cliente.</p>

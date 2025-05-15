@@ -70,10 +70,10 @@ export default function AdminLayout() {
           <div className="flex items-center">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="mr-4 p-1 rounded-md hover:bg-amber-100 lg:hidden"
+              className="mr-4 p-1 rounded-md hover:bg-amber-100 md:hidden lg:hidden"
               aria-label="Toggle menu"
             >
-              <Menu className="h-6 w-6 text-amber-800" />
+              <Menu className="h-6 w-6 text-amber-800 md:hidden" />
             </button>
             <Link
               to="/admin/dashboard"
@@ -105,10 +105,10 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <div className="flex flex-1 relative md:relative md:w-full md:max-h-[90vh] overflow-y-hidden">
+      <div className="flex flex-1 relative md:w-full md:min-h-[80vh]">
         {/* Sidebar - Mobile Overlay */}
         <div
-          className={`fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden transition-opacity duration-200 ${
+          className={`fixed inset-0 bg-black bg-opacity-50 z-20 hidden lg:hidden md:hidden transition-opacity duration-200 ${
             isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           onClick={() => setIsSidebarOpen(false)}
@@ -116,14 +116,14 @@ export default function AdminLayout() {
 
         {/* Sidebar */}
         <aside
-          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-20 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 
+          className={`absolute top-0 left-0 h-full w-64 bg-white shadow-lg z-10 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 
             md:sticky md:w-auto md:min-h-[90vh] md:translate-x-0 md:shadow-none md:border-black md:border-0 ${
               isSidebarOpen 
                 ? "translate-x-0" 
                 : "-translate-x-full"
           }`}
         >
-          <div className="p-4 border-b lg:hidden flex justify-between items-center">
+          <div className="p-4 border-b lg:hidden md:hidden flex justify-between items-center">
             <span className="font-bold text-amber-800">Menu</span>
             <button
               onClick={() => setIsSidebarOpen(false)}
@@ -230,7 +230,7 @@ export default function AdminLayout() {
         </aside>
 
         {/* Main Content */}
-        <main className="md:h-auto md:overflow-y-auto flex-1 p-4 lg:p-6">
+        <main className="md:h-auto flex-1 p-4 overflow-y-auto lg:p-6">
           <Outlet />
         </main>
       </div>

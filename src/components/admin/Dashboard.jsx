@@ -57,6 +57,27 @@ const dashboardData = {
       valor: 54.0,
       status: "Entregue",
     },
+    {
+      id: "PED12347",
+      cliente: "Carlos Mendes",
+      data: "Hoje, 10:15",
+      valor: 54.0,
+      status: "Entregue",
+    },
+    {
+      id: "PED12347",
+      cliente: "Carlos Mendes",
+      data: "Hoje, 10:15",
+      valor: 54.0,
+      status: "Entregue",
+    },
+    {
+      id: "PED12347",
+      cliente: "Carlos Mendes",
+      data: "Hoje, 10:15",
+      valor: 54.0,
+      status: "Entregue",
+    },
   ],
 };
 
@@ -70,7 +91,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col min-h-[80dvh] overflow-visible">
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <p className="text-gray-600">Visão geral do seu negócio</p>
@@ -174,8 +195,8 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="w-full overflow-x-auto rounded-md">
+            <table className="min-w-[600px] md:min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th
@@ -254,14 +275,17 @@ export default function Dashboard() {
         {/* Produtos mais vendidos */}
         <div className="bg-white rounded-lg shadow-sm p-4">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="md:text-lg lg:text-lg  font-semibold text-gray-800">
               Produtos Mais Vendidos
             </h2>
             <Link
               to="/admin/produtos"
               className="text-amber-600 text-sm hover:underline flex items-center"
             >
-              Ver todos <ArrowRight className="h-4 w-4 ml-1" />
+              <span className="sm:block lg:hidden">
+                Ver todos
+              </span>
+              <ArrowRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
 

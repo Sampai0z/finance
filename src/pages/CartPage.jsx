@@ -91,10 +91,10 @@ export default function CartPage() {
   const total = subtotal + deliveryFee - discount;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 relative">
       {/* <Navbar /> */}
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8 border-2">
         <div className="flex items-center mb-6">
           <Link to="/" className="text-amber-600 hover:text-amber-700 mr-3">
             <ArrowLeft className="h-5 w-5" />
@@ -122,14 +122,14 @@ export default function CartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Lista de itens do carrinho */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="bg-white rounded-lg shadow-sm overflow-y-scroll">
                 <div className="p-4 border-b">
                   <h2 className="text-lg font-semibold text-gray-800">
                     Itens do Carrinho ({cartItems.length})
                   </h2>
                 </div>
 
-                <div className="divide-y">
+                <div className="divide-y h-96">
                   {cartItems.map((item) => (
                     <div
                       key={item.id}
@@ -303,14 +303,14 @@ export default function CartPage() {
         )}
       </main>
 
-      <footer className="bg-amber-800 text-white py-6">
+      {/* <footer className="bg-amber-800 text-white py-6 absolute bottom-0 w-full">
         <div className="container mx-auto px-4 text-center">
           <p>
             © {new Date().getFullYear()} SalgadosExpress. Todos os direitos
             reservados.
           </p>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

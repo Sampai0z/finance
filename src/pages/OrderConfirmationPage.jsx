@@ -96,14 +96,14 @@ export default function OrderConfirmationPage() {
         </div>
       </main>
 
-      <footer className="bg-amber-800 text-white py-6 mt-8">
+      {/* <footer className="bg-amber-800 text-white py-6 mt-8">
         <div className="container mx-auto px-4 text-center">
           <p>
             © {new Date().getFullYear()} SalgadosExpress. Todos os direitos
             reservados.
           </p>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

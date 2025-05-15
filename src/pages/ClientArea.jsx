@@ -72,7 +72,7 @@ export default function ClientArea() {
   };
 
   return (
-    <div className="min-h-screen bg-amber-50 flex flex-col">
+    <div className="relative min-h-screen bg-amber-50 flex flex-col">
       {/* Header */}
       <header className="bg-white w-full border-b sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -139,10 +139,10 @@ export default function ClientArea() {
         </div>
       </header>
 
-      <div className="flex flex-1 relative md:relative md:w-full md:max-h-[90vh] overflow-y-hidden">
+      <div className="flex flex-1 relative md:w-full md:min-h-[80vh]">
         {/* Sidebar - Mobile Overlay */}
         <div
-          className={`fixed inset-0 bg-black bg-opacity-50 z-20 transition-opacity duration-200 ${
+          className={`fixed inset-0 bg-black bg-opacity-50 z-20  transition-opacity duration-200 ${
             isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           onClick={closeSidebar}
@@ -260,8 +260,8 @@ export default function ClientArea() {
         </aside>
 
         {/* Main Content */}
-        <main className=" md:h-auto md:overflow-y-auto flex-1 p-4">
-          <div className="md:overflow-y-scroll md:relative container mx-auto">
+        <main className=" md:h-auto flex-1 p-4 overflow-y-auto">
+          <div className="md:relative container mx-auto  overflow-y-auto">
             <Outlet />
           </div>
         </main>

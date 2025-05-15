@@ -140,7 +140,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-[80vh] flex flex-col bg-gray-50">
       {/* <Navbar /> */}
 
       <main className="flex-grow container mx-auto px-4 py-8">
@@ -154,10 +154,10 @@ export default function CheckoutPage() {
           <h1 className="text-2xl font-bold text-gray-800">Finalizar Pedido</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
           {/* Formulário de checkout */}
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 p-2">
               {/* Informações pessoais */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -646,14 +646,14 @@ export default function CheckoutPage() {
         </div>
       </main>
 
-      <footer className="bg-amber-800 text-white py-6 mt-8">
+      {/* <footer className="bg-amber-800 text-white py-6 mt-8">
         <div className="container mx-auto px-4 text-center">
           <p>
             © {new Date().getFullYear()} SalgadosExpress. Todos os direitos
             reservados.
           </p>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

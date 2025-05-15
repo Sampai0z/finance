@@ -138,6 +138,14 @@ function App() {
           />
         </Route>
       </Routes>
+      <footer className="bg-amber-800 text-white py-6 relative bottom-0 w-full">
+        <div className="container mx-auto px-4 text-center">
+          <p>
+            © {new Date().getFullYear()} SalgadosExpress. Todos os direitos
+            reservados.
+          </p>
+        </div>
+      </footer>
     </CartProvider>
   );
 }
