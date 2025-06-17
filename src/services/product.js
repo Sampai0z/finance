@@ -6,6 +6,7 @@ export const allProducts = [
     price: 8.0,
     quantidade: 1,
     category: "Salgados Grandes",
+    img:"/coxinhaDeFrango03.png"
   },
   {
     id: 2,
@@ -13,6 +14,7 @@ export const allProducts = [
     price: 7.0,
     quantidade: 1,
     category: "Salgados Grandes",
+    img:"./pastelDeForno.jpg"
   },
   {
     id: 3,
@@ -20,6 +22,7 @@ export const allProducts = [
     price: 7.0,
     quantidade: 1,
     category: "Salgados Grandes",
+    img:"./quiche.jpg"
   },
   {
     id: 4,
@@ -27,6 +30,7 @@ export const allProducts = [
     price: 6.0,
     quantidade: 1,
     category: "Salgados Grandes",
+    img:"./enroladinho.jpeg"
   },
   {
     id: 5,
@@ -34,6 +38,7 @@ export const allProducts = [
     price: 8.0,
     quantidade: 1,
     category: "Salgados Grandes",
+    img:"./bolinhoDeCarne.jpg"
   },
   {
     id: 6,
@@ -41,6 +46,7 @@ export const allProducts = [
     price: 14.0,
     quantidade: 1,
     category: "Porções de Petiscos",
+    img:"./batataFritaSimples.jpg"
   },
   {
     id: 7,
@@ -48,6 +54,7 @@ export const allProducts = [
     price: 18.0,
     quantidade: 1,
     category: "Porções de Petiscos",
+    img:"./batataFritaCalabresa.jpg"
   },
   {
     id: 8,
@@ -55,6 +62,7 @@ export const allProducts = [
     price: 18.0,
     quantidade: 1,
     category: "Porções de Petiscos",
+    img:"./dadinhoDeTapioca.jpg"
   },
   {
     id: 9,
@@ -62,6 +70,7 @@ export const allProducts = [
     price: 20.0,
     quantidade: 1,
     category: "Porções de Petiscos",
+    img:"./queijoEmpanado.jpg"
   },
   {
     id: 10,
@@ -69,6 +78,7 @@ export const allProducts = [
     price: 5.0,
     quantidade: 1,
     category: "bebidas",
+    img:"./cocaLata.jpg"
   },
   {
     id: 11,
@@ -76,6 +86,7 @@ export const allProducts = [
     price: 4.0,
     quantidade: 1,
     category: "bebidas",
+    img:"./fantaLata.jpg"
   },
   {
     id: 12,
@@ -83,6 +94,7 @@ export const allProducts = [
     price: 4.0,
     quantidade: 1,
     category: "bebidas",
+    img:"./guaranaLata.jpg"
   },
   {
     id: 13,
@@ -90,6 +102,7 @@ export const allProducts = [
     price: 14.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:"./miniCoxinhaFrango.jpg"
   },
   {
     id: 14,
@@ -97,6 +110,7 @@ export const allProducts = [
     price: 16.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:"./miniCoxinhaCarne.jpg"
   },
   {
     id: 15,
@@ -104,6 +118,7 @@ export const allProducts = [
     price: 14.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:""
   },
   {
     id: 16,
@@ -111,6 +126,7 @@ export const allProducts = [
     price: 16.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:""
   },
   {
     id: 17,
@@ -118,6 +134,7 @@ export const allProducts = [
     price: 14.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:""
   },
   {
     id: 18,
@@ -125,6 +142,7 @@ export const allProducts = [
     price: 18.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:""
   },
   {
     id: 19,
@@ -132,6 +150,7 @@ export const allProducts = [
     price: 16.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:"./croqueteFrangoQueijo.jpg"
   },
   {
     id: 20,
@@ -139,6 +158,7 @@ export const allProducts = [
     price: 14.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:"./croqueteDeCostela.jpg"
   },
   {
     id: 21,
@@ -146,6 +166,7 @@ export const allProducts = [
     price: 14.0,
     quantidade: 8,
     category: "Mini Salgados",
+    img:"./bolinhaDeQueijo.jpeg"
   },
   {
     id: 22,
@@ -153,6 +174,7 @@ export const allProducts = [
     price: 65.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 23,
@@ -160,6 +182,7 @@ export const allProducts = [
     price: 65.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 24,
@@ -167,6 +190,7 @@ export const allProducts = [
     price: 60.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 25,
@@ -174,6 +198,7 @@ export const allProducts = [
     price: 60.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 26,
@@ -181,6 +206,7 @@ export const allProducts = [
     price: 60.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 27,
@@ -188,6 +214,7 @@ export const allProducts = [
     price: 70.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 28,
@@ -195,6 +222,7 @@ export const allProducts = [
     price: 60.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 29,
@@ -202,6 +230,7 @@ export const allProducts = [
     price: 50.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 30,
@@ -209,6 +238,7 @@ export const allProducts = [
     price: 75.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 31,
@@ -216,6 +246,7 @@ export const allProducts = [
     price: 50.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
   {
     id: 32,
@@ -223,5 +254,6 @@ export const allProducts = [
     price: 80.0,
     quantidade: 100,
     category: "Porção Cento",
+    img:""
   },
 ];
