@@ -1,153 +1,62 @@
-import "./App.css";
-import Login from "./pages/LoginPage.jsx";
-import AdminLoginPage from "./pages/AdminLoginPage.jsx";
-import HomePage from "./pages/HomePage.jsx";
-import { Routes, Route } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute.jsx";
-{
-  /* Rotas Clientes */
-}
-import ClientArea from "./pages/ClientArea.jsx";
-import Profile from "./components/client-area/Profile.jsx";
-import OrderHistory from "./components/client-area/OrderHistory.jsx";
-import Addresses from "./components/client-area/Addresses.jsx";
-import Dashboard from "./components/client-area/Dashboard.jsx";
-{
-  /* Rotas administrativas */
-}
-import AdminLayout from "./components/admin/AdminLayout.jsx";
-import AdminDashboard from "./components/admin/Dashboard.jsx";
-import OrdersList from "./components/admin/OrdersList.jsx";
-import OrderDetail from "./components/admin/OrderDetail.jsx";
-import AdminPrivateRoute from "./components/AdminPrivateRoute.jsx";
-{
-  /* Rotas carrinho e checkout */
-}
-import CartPage from "./pages/CartPage.jsx";
-import CheckoutPage from "./pages/CheckoutPage.jsx";
-import OrderConfirmationPage from "./pages/OrderConfirmationPage.jsx";
-import { CartProvider } from "./components/CartContext.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./HomePage";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
+// import SideBar from "./components/SideBar";
+// import Footer from "./components/Footer";
 
-function App() {
-  return (  
-    <CartProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<HomePage />} />
-        {/* Rotas Clientes */}
-        <Route
-          path="/cliente"
-          element={
-            <PrivateRoute>
-              <ClientArea />
-            </PrivateRoute>
-          }
-        >
-          <Route
-            path="perfil"
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="pedidos"
-            element={
-              <PrivateRoute>
-                <OrderHistory />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="enderecos"
-            element={
-              <PrivateRoute>
-                <Addresses />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="carrinho"
-            element={
-              <PrivateRoute>
-                <CartPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="checkout"
-            element={
-              <PrivateRoute>
-                <CheckoutPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="pedido-confirmado"
-            element={
-              <PrivateRoute>
-                <OrderConfirmationPage />
-              </PrivateRoute>
-            }
-          />
-        </Route>
+function LayoutWrapper() {
+  // const [menu, setMenu] = useState(true);
+  // const location = useLocation();
 
-        {/* Rotas administrativas */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route
-          path="/admin"
-          element={
-            <AdminPrivateRoute>
-              <AdminLayout />
-            </AdminPrivateRoute>
-          }
-        >
-          <Route
-            path="dashboard"
-            element={
-              <AdminPrivateRoute>
-                <AdminDashboard />
-              </AdminPrivateRoute>
-            }
-          />
-          <Route
-            path="pedidos"
-            element={
-              <AdminPrivateRoute>
-                <OrdersList />
-              </AdminPrivateRoute>
-            }
-          />
-          <Route
-            path="pedidos/:id"
-            element={
-              <AdminPrivateRoute>
-                <OrderDetail />
-              </AdminPrivateRoute>
-            }
-          />
-        </Route>
-      </Routes>
-      <footer className="bg-amber-800 text-white py-6 relative bottom-0 w-full">
-        <div className="container mx-auto px-4 text-center">
-          <p>
-            © {new Date().getFullYear()} SalgadosExpress. Todos os direitos
-            reservados.
-          </p>
+  return (
+    <div>
+      {/* <SignedIn>
+        {(location.pathname === "/" || location.pathname === "/dashboard") && (
+          <SideBar valueMenu={menu} showProfile={menu} />
+        )}
+      </SignedIn> */}
+
+      {/* <div
+        className="hidden md:block md:w-1/5 md:h-[93vh] md:box-border"
+        onClick={() => setMenu(true)}
+      ></div> */}
+      <SignedIn>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          {/* <Route path="/task/edit/:id" element={<EditPage />} /> */}
+        </Routes>
+      </SignedIn>
+
+      <SignedOut>
+        <div className="w-full h-full pt-52 flex flex-col justify-start items-center gap-5 ">
+          <span className="w-auto h-auto mx-7 md:w-auto md:min-h-1/4 md:mx-0 py-2 px-3 bg-[#2F2B2B]/70 text-[#F5F5F5] rounded-lg">
+            <span className="w-full flex justify-center text-2xl font-semibold">
+              ATENÇÃO
+            </span>
+            <p>
+              Se for apenas testar o site, Por favor usar o seguinte email e
+              senha.
+              <br />
+              <b>Email:</b> test_email+clerk_test@example.com <br />
+              <b>Senha:</b> test_email+clerk_test@example.com
+            </p>
+          </span>
+          <SignInButton className="w-36 h-9 my-1 mx-3 py-1 px-2 bg-[#2C3E50] rounded-md text-[#F5F5F5] text-sm font-bold cursor-pointer hover:bg-[#243342] hover:text-[#cccccc]">
+            Entrar
+          </SignInButton>
         </div>
-      </footer>
-    </CartProvider>
+      </SignedOut>
+    </div>
   );
 }
 
-export default App;
+function RootApp() {
+  return (
+    <Router>
+      <LayoutWrapper />
+    </Router>
+  );
+}
+
+export default RootApp;
